@@ -25,9 +25,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf 
 RUN mkdir -p /app/demos
 
 # Pull demo files from GitHub Release
-# TODO: Replace with your actual GitHub release URLs and checksums
-# RUN curl -L https://github.com/YOUR_USER/DeadlockDashboard/releases/download/v1.0.0/match1.dem -o /app/demos/match1.dem \
-#     && echo "EXPECTED_SHA256  /app/demos/match1.dem" | sha256sum -c -
+RUN curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/72318302.dem -o /app/demos/72318302.dem \
+    && echo "9186988c7079cbe0c36410a2ffecf5c220c87b08782568df9b55b7d5bb619a63  /app/demos/72318302.dem" | sha256sum -c -
+
 
 # Copy published app from build stage
 COPY --from=build /app/publish ./
