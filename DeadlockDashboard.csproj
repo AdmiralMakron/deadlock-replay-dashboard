@@ -11,4 +11,11 @@
     <PackageReference Include="DemoFile.Game.Deadlock" Version="0.41.2" />
   </ItemGroup>
 
+  <!-- Exclude demofile-net source (reference only, not part of build) -->
+  <ItemGroup>
+    <Compile Remove="demofile-net/**" />
+    <Content Remove="demofile-net/**" />
+    <None Remove="demofile-net/**" />
+  </ItemGroup>
+
 </Project>

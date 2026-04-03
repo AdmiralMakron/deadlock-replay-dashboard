@@ -1,0 +1,181 @@
+@using DeadlockDashboard.Models
+
+<div class="chart-panel">
+    <div class="chart-controls">
+        <h5>Player Detail</h5>
+        <div class="control-group">
+            <select class="form-select form-select-sm player-select" @bind="selectedPlayerName" @bind:after="OnPlayerChanged">
+                @foreach (var player in Data.Players)
+                {
+                    <option value="@player.Name">@player.Name (@player.Team)</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    @if (selectedPlayer != null)
+    {
+        <div class="player-detail-grid">
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.Kills</div>
+                <div class="stat-label">Kills</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.Deaths</div>
+                <div class="stat-label">Deaths</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.Assists</div>
+                <div class="stat-label">Assists</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value kda">@ComputeKDA()</div>
+                <div class="stat-label">KDA</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.HeroDamage.ToString("N0")</div>
+                <div class="stat-label">Player Damage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.ObjectiveDamage.ToString("N0")</div>
+                <div class="stat-label">Obj. Damage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.Healing.ToString("N0")</div>
+                <div class="stat-label">Healing</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.GoldNetWorth.ToString("N0")</div>
+                <div class="stat-label">Net Worth</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.LastHits</div>
+                <div class="stat-label">Last Hits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.Denies</div>
+                <div class="stat-label">Denies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@selectedPlayer.Level</div>
+                <div class="stat-label">Level</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value team-val">@selectedPlayer.Team</div>
+                <div class="stat-label">Team</div>
+            </div>
+        </div>
+
+        <div class="kill-timeline-section">
+            <h6>Kill / Death Timeline</h6>
+            <div class="kill-timeline">
+                @if (playerEvents.Count == 0)
+                {
+                    <p class="text-muted">No kill or death events recorded.</p>
+                }
+                else
+                {
+                    @foreach (var evt in playerEvents)
+                    {
+                        <div class="timeline-event @evt.CssClass">
+                            <span class="event-time">@FormatTime(evt.GameTimeSeconds)</span>
+                            <span class="event-icon">@evt.Icon</span>
+                            <span class="event-desc">@evt.Description</span>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public MatchData Data { get; set; } = default!;
+
+    private string selectedPlayerName = "";
+    private PlayerStats? selectedPlayer;
+    private List<TimelineEvent> playerEvents = [];
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrEmpty(selectedPlayerName) && Data.Players.Count > 0)
+        {
+            selectedPlayerName = Data.Players[0].Name;
+        }
+        RefreshPlayer();
+    }
+
+    private void OnPlayerChanged()
+    {
+        RefreshPlayer();
+    }
+
+    private void RefreshPlayer()
+    {
+        selectedPlayer = Data.Players.FirstOrDefault(p => p.Name == selectedPlayerName);
+        BuildTimeline();
+    }
+
+    private void BuildTimeline()
+    {
+        playerEvents = [];
+        if (selectedPlayer == null) return;
+
+        foreach (var kill in Data.KillEvents.OrderBy(k => k.GameTimeSeconds))
+        {
+            if (kill.AttackerName == selectedPlayerName)
+            {
+                var assistText = kill.AssisterNames.Count > 0 ? $" (assisted by {string.Join(", ", kill.AssisterNames)})" : "";
+                playerEvents.Add(new TimelineEvent
+                {
+                    GameTimeSeconds = kill.GameTimeSeconds,
+                    Icon = kill.IsHeadshot ? "HS" : "K",
+                    Description = $"Killed {kill.VictimName}{assistText}",
+                    CssClass = "event-kill"
+                });
+            }
+            else if (kill.VictimName == selectedPlayerName)
+            {
+                playerEvents.Add(new TimelineEvent
+                {
+                    GameTimeSeconds = kill.GameTimeSeconds,
+                    Icon = "D",
+                    Description = $"Killed by {kill.AttackerName}",
+                    CssClass = "event-death"
+                });
+            }
+            else if (kill.AssisterNames.Contains(selectedPlayerName))
+            {
+                playerEvents.Add(new TimelineEvent
+                {
+                    GameTimeSeconds = kill.GameTimeSeconds,
+                    Icon = "A",
+                    Description = $"Assisted kill on {kill.VictimName} (by {kill.AttackerName})",
+                    CssClass = "event-assist"
+                });
+            }
+        }
+    }
+
+    private string ComputeKDA()
+    {
+        if (selectedPlayer == null) return "0.0";
+        var deaths = Math.Max(1, selectedPlayer.Deaths);
+        return ((selectedPlayer.Kills + selectedPlayer.Assists) / (double)deaths).ToString("F1");
+    }
+
+    private static string FormatTime(double seconds)
+    {
+        var ts = TimeSpan.FromSeconds(seconds);
+        return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}";
+    }
+
+    private class TimelineEvent
+    {
+        public double GameTimeSeconds { get; set; }
+        public string Icon { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string CssClass { get; set; } = "";
+    }
+}

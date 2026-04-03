@@ -1,0 +1,140 @@
+@using DeadlockDashboard.Models
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<div class="chart-panel">
+    <div class="chart-controls">
+        <h5>Souls Over Time</h5>
+        <div class="control-group">
+            <div class="btn-group btn-group-sm me-3">
+                <button class="btn @(viewMode == "player" ? "btn-primary" : "btn-outline-secondary")" @onclick='() => SetViewMode("player")'>Per Player</button>
+                <button class="btn @(viewMode == "team" ? "btn-primary" : "btn-outline-secondary")" @onclick='() => SetViewMode("team")'>Per Team</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-wrapper">
+        <canvas id="timelineChart"></canvas>
+    </div>
+
+    @if (viewMode == "player")
+    {
+        <div class="player-toggles">
+            <span class="toggle-label">Toggle Players:</span>
+            @foreach (var player in Data.Players)
+            {
+                var p = player;
+                <label class="player-toggle @(p.Team.ToLower())">
+                    <input type="checkbox" checked="@IsPlayerVisible(p.Name)" @onchange="e => TogglePlayer(p.Name, (bool)(e.Value ?? false))" />
+                    <span>@p.Name</span>
+                </label>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public MatchData Data { get; set; } = default!;
+
+    private string viewMode = "player";
+    private HashSet<string> hiddenPlayers = new();
+    private bool rendered;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender || !rendered)
+        {
+            rendered = true;
+            await RenderChart();
+        }
+    }
+
+    private bool IsPlayerVisible(string name) => !hiddenPlayers.Contains(name);
+
+    private async Task TogglePlayer(string name, bool visible)
+    {
+        if (visible)
+            hiddenPlayers.Remove(name);
+        else
+            hiddenPlayers.Add(name);
+        await RenderChart();
+    }
+
+    private async Task SetViewMode(string mode)
+    {
+        viewMode = mode;
+        await RenderChart();
+    }
+
+    private async Task RenderChart()
+    {
+        if (Data.Timeline.Count == 0) return;
+
+        var labels = Data.Timeline.Select(s => (s.GameTimeSeconds / 60.0).ToString("F1")).ToArray();
+
+        object config;
+
+        if (viewMode == "team")
+        {
+            var amberPlayers = Data.Players.Where(p => p.Team == "Amber").Select(p => p.Name).ToHashSet();
+            var sapphirePlayers = Data.Players.Where(p => p.Team == "Sapphire").Select(p => p.Name).ToHashSet();
+
+            var amberData = Data.Timeline.Select(s =>
+                s.PlayerSouls.Where(kv => amberPlayers.Contains(kv.Key)).Sum(kv => kv.Value)).ToArray();
+            var sapphireData = Data.Timeline.Select(s =>
+                s.PlayerSouls.Where(kv => sapphirePlayers.Contains(kv.Key)).Sum(kv => kv.Value)).ToArray();
+
+            config = new
+            {
+                labels,
+                xLabel = "Game Time (min)",
+                yLabel = "Total Souls",
+                datasets = new object[]
+                {
+                    new { label = "Amber", data = amberData, color = "#E8943A", hidden = false },
+                    new { label = "Sapphire", data = sapphireData, color = "#3A7BD5", hidden = false }
+                }
+            };
+        }
+        else
+        {
+            var seriesColors = new[] { "#E8943A", "#5DAA68", "#9B6FD4", "#3A7BD5", "#D4A843", "#4D9D8F", "#D43A3A", "#C9ABF0" };
+
+            var datasets = new List<object>();
+            int colorIdx = 0;
+
+            foreach (var player in Data.Players)
+            {
+                var color = seriesColors[colorIdx++ % seriesColors.Length];
+
+                var playerData = Data.Timeline.Select(s =>
+                    s.PlayerSouls.GetValueOrDefault(player.Name, 0)).ToArray();
+
+                datasets.Add(new
+                {
+                    label = player.Name,
+                    data = playerData,
+                    color,
+                    hidden = hiddenPlayers.Contains(player.Name)
+                });
+            }
+
+            config = new
+            {
+                labels,
+                xLabel = "Game Time (min)",
+                yLabel = "Souls",
+                datasets
+            };
+        }
+
+        await JS.InvokeVoidAsync("deadlockCharts.createLineChart", "timelineChart", config);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try { await JS.InvokeVoidAsync("deadlockCharts.destroyChart", "timelineChart"); }
+        catch { /* component may be gone */ }
+    }
+}

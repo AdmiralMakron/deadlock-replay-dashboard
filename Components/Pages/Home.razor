@@ -1,7 +1,249 @@
-﻿@page "/"
+@page "/"
+@rendermode InteractiveServer
+@using DeadlockDashboard.Models
+@using DeadlockDashboard.Services
+@using DeadlockDashboard.Components.Dashboard
+@inject DemoParserService ParserService
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Deadlock Replay Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
+@* Top bar *@
+<nav class="top-bar">
+    @if (parsedDemos.Count > 0)
+    {
+        <button class="hamburger-btn" @onclick="ToggleDrawer" title="Toggle menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    }
+    <a class="app-title" href="" @onclick="GoHome" @onclick:preventDefault>Deadlock Dashboard</a>
+    <span class="top-bar-spacer"></span>
+    <a class="top-bar-link" href="https://github.com/AdmiralMakron/deadlock-replay-dashboard" target="_blank">GitHub</a>
+</nav>
 
-Welcome to your new app.
+@* Slide-out drawer *@
+@if (drawerOpen && parsedDemos.Count > 0)
+{
+    <div class="drawer-backdrop" @onclick="ToggleDrawer"></div>
+    <aside class="drawer">
+        <div class="drawer-header">Parsed Demos</div>
+        <nav class="drawer-nav">
+            @foreach (var kvp in parsedDemos)
+            {
+                var file = kvp.Key;
+                <button class="drawer-item @(file == activeDemoFile ? "active" : "")"
+                        @onclick="() => SwitchToDashboard(file)">
+                    <span class="drawer-item-icon">&#9654;</span>
+                    <span class="drawer-item-label">@file</span>
+                </button>
+            }
+        </nav>
+        <div class="drawer-footer">
+            <button class="btn btn-sm btn-outline-secondary w-100" @onclick="GoHomeFromDrawer">
+                + Parse New Demo
+            </button>
+        </div>
+    </aside>
+}
+
+@* Main content *@
+<div class="dashboard-container">
+    @if (viewMode == "home")
+    {
+        <div class="file-selector-panel">
+            <h2>Deadlock Replay Dashboard</h2>
+            <p class="text-muted">Select a demo file to analyze</p>
+
+            <div class="selector-row">
+                <select class="form-select" @bind="selectedFile" disabled="@isParsing">
+                    <option value="">-- Select a .dem file --</option>
+                    @foreach (var file in availableFiles)
+                    {
+                        <option value="@file">@file</option>
+                    }
+                </select>
+                <button class="btn btn-primary" @onclick="ParseDemo" disabled="@(isParsing || string.IsNullOrEmpty(selectedFile))">
+                    @if (isParsing)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                        <span>Parsing...</span>
+                    }
+                    else
+                    {
+                        <span>Parse Demo</span>
+                    }
+                </button>
+            </div>
+
+            @if (isParsing)
+            {
+                <div class="progress-section">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"
+                             role="progressbar"
+                             style="width: @(parseProgress)%"
+                             aria-valuenow="@parseProgress" aria-valuemin="0" aria-valuemax="100">
+                            @parseProgress%
+                        </div>
+                    </div>
+                    <p class="text-muted mt-2">Parsing demo file... This may take a few minutes for large files.</p>
+                </div>
+            }
+
+            @if (parseError != null)
+            {
+                <div class="alert alert-danger mt-3">@parseError</div>
+            }
+
+            @if (parsedDemos.Count > 0)
+            {
+                <div class="parsed-demos-list">
+                    <h6>Previously Parsed</h6>
+                    @foreach (var kvp in parsedDemos)
+                    {
+                        var file = kvp.Key;
+                        <button class="btn btn-sm btn-outline-secondary me-2 mb-2" @onclick="() => SwitchToDashboard(file)">
+                            @file
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else if (viewMode == "dashboard" && activeMatchData != null)
+    {
+        <div class="dashboard-header">
+            <h3>Match Analysis — @activeDemoFile</h3>
+            <div class="header-info">
+                <span class="badge bg-secondary">Duration: @FormatDuration(activeMatchData.MatchDurationSeconds)</span>
+                <span class="badge bg-secondary">Kills: @activeMatchData.KillEvents.Count</span>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs dashboard-tabs">
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "timeline" ? "active" : "")" @onclick='() => activeTab = "timeline"'>
+                    Match Timeline
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "comparison" ? "active" : "")" @onclick='() => activeTab = "comparison"'>
+                    Player Comparison
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "detail" ? "active" : "")" @onclick='() => activeTab = "detail"'>
+                    Player Detail
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            @if (activeTab == "timeline")
+            {
+                <MatchTimeline Data="activeMatchData" />
+            }
+            else if (activeTab == "comparison")
+            {
+                <PlayerComparison Data="activeMatchData" />
+            }
+            else if (activeTab == "detail")
+            {
+                <PlayerDetail Data="activeMatchData" />
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private string[] availableFiles = [];
+    private string selectedFile = "";
+    private bool isParsing;
+    private int parseProgress;
+    private string? parseError;
+    private string activeTab = "timeline";
+
+    private Dictionary<string, MatchData> parsedDemos = new();
+    private string? activeDemoFile;
+    private MatchData? activeMatchData;
+    private string viewMode = "home"; // "home" or "dashboard"
+    private bool drawerOpen;
+
+    protected override void OnInitialized()
+    {
+        availableFiles = ParserService.GetAvailableDemos();
+        if (availableFiles.Length == 1)
+            selectedFile = availableFiles[0];
+    }
+
+    private async Task ParseDemo()
+    {
+        if (string.IsNullOrEmpty(selectedFile)) return;
+
+        isParsing = true;
+        parseProgress = 0;
+        parseError = null;
+        StateHasChanged();
+
+        try
+        {
+            var matchData = await ParserService.ParseDemoAsync(
+                selectedFile,
+                progress =>
+                {
+                    parseProgress = progress;
+                    InvokeAsync(StateHasChanged);
+                });
+
+            parsedDemos[selectedFile] = matchData;
+            SwitchToDashboard(selectedFile);
+        }
+        catch (Exception ex)
+        {
+            parseError = $"Failed to parse demo: {ex.Message}";
+        }
+        finally
+        {
+            isParsing = false;
+            StateHasChanged();
+        }
+    }
+
+    private void SwitchToDashboard(string fileName)
+    {
+        if (parsedDemos.TryGetValue(fileName, out var data))
+        {
+            activeDemoFile = fileName;
+            activeMatchData = data;
+            viewMode = "dashboard";
+            activeTab = "timeline";
+            drawerOpen = false;
+        }
+    }
+
+    private void GoHome()
+    {
+        viewMode = "home";
+        drawerOpen = false;
+    }
+
+    private void GoHomeFromDrawer()
+    {
+        viewMode = "home";
+        drawerOpen = false;
+    }
+
+    private void ToggleDrawer()
+    {
+        drawerOpen = !drawerOpen;
+    }
+
+    private static string FormatDuration(double seconds)
+    {
+        var ts = TimeSpan.FromSeconds(seconds);
+        return ts.TotalHours >= 1
+            ? $"{(int)ts.TotalHours}:{ts.Minutes:D2}:{ts.Seconds:D2}"
+            : $"{ts.Minutes}:{ts.Seconds:D2}";
+    }
+}

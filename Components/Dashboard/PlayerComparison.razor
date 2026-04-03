@@ -1,0 +1,123 @@
+@using DeadlockDashboard.Models
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<div class="chart-panel">
+    <div class="chart-controls">
+        <h5>Player Stat Comparison</h5>
+        <div class="control-group">
+            <span class="control-label">Stats to show:</span>
+            @foreach (var stat in allStats)
+            {
+                var s = stat;
+                <label class="stat-toggle">
+                    <input type="checkbox" checked="@selectedStats.Contains(s.Key)" @onchange="e => ToggleStat(s.Key, (bool)(e.Value ?? false))" />
+                    <span>@s.Value</span>
+                </label>
+            }
+        </div>
+    </div>
+
+    @foreach (var stat in allStats.Where(s => selectedStats.Contains(s.Key)))
+    {
+        <div @key="stat.Key" class="chart-wrapper chart-wrapper-bar">
+            <h6 class="chart-subtitle">@stat.Value</h6>
+            <canvas id="bar-@stat.Key"></canvas>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public MatchData Data { get; set; } = default!;
+
+    private static readonly Dictionary<string, string> allStats = new()
+    {
+        ["kills"] = "Kills",
+        ["deaths"] = "Deaths",
+        ["assists"] = "Assists",
+        ["heroDamage"] = "Player Damage",
+        ["objectiveDamage"] = "Objective Damage",
+        ["goldNetWorth"] = "Souls"
+    };
+
+    private HashSet<string> selectedStats = new() { "kills", "deaths", "assists", "heroDamage" };
+    private bool chartsNeedRender = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (chartsNeedRender)
+        {
+            chartsNeedRender = false;
+            await RenderCharts();
+        }
+    }
+
+    private async Task ToggleStat(string stat, bool selected)
+    {
+        // Destroy all Chart.js instances BEFORE Blazor removes canvas elements from the DOM.
+        // Chart.js attaches a ResizeObserver (responsive:true) that crashes if the canvas
+        // is ripped out while the observer is still live.
+        foreach (var s in allStats.Keys)
+        {
+            try { await JS.InvokeVoidAsync("deadlockCharts.destroyChart", $"bar-{s}"); }
+            catch { }
+        }
+
+        if (selected)
+            selectedStats.Add(stat);
+        else if (selectedStats.Count > 1)
+            selectedStats.Remove(stat);
+
+        chartsNeedRender = true;
+    }
+
+    private async Task RenderCharts()
+    {
+        var seriesColors = new[] { "#E8943A", "#5DAA68", "#9B6FD4", "#3A7BD5", "#D4A843", "#4D9D8F", "#D43A3A", "#C9ABF0" };
+        var labels = Data.Players.Select(p => p.Name).ToArray();
+        var colors = Data.Players.Select((p, i) => seriesColors[i % seriesColors.Length]).ToArray();
+
+        foreach (var stat in allStats.Where(s => selectedStats.Contains(s.Key)))
+        {
+            var data = Data.Players.Select(p => GetStatValue(p, stat.Key)).ToArray();
+
+            var config = new
+            {
+                labels,
+                datasets = new object[]
+                {
+                    new
+                    {
+                        label = stat.Value,
+                        data,
+                        colors,
+                        color = "#888"
+                    }
+                }
+            };
+
+            await JS.InvokeVoidAsync("deadlockCharts.createBarChart", $"bar-{stat.Key}", config);
+        }
+    }
+
+    private static int GetStatValue(PlayerStats p, string stat) => stat switch
+    {
+        "kills" => p.Kills,
+        "deaths" => p.Deaths,
+        "assists" => p.Assists,
+        "heroDamage" => p.HeroDamage,
+        "objectiveDamage" => p.ObjectiveDamage,
+        "goldNetWorth" => p.GoldNetWorth,
+        _ => 0
+    };
+
+    public async ValueTask DisposeAsync()
+    {
+        foreach (var stat in allStats.Keys)
+        {
+            try { await JS.InvokeVoidAsync("deadlockCharts.destroyChart", $"bar-{stat}"); }
+            catch { }
+        }
+    }
+}

@@ -1,6 +1,9 @@
 using DeadlockDashboard.Components;
+using DeadlockDashboard.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<DemoParserService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
