@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <DefineConstants Condition=" '$(Configuration)' == 'Baseline' ">$(DefineConstants);BASELINE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.9" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' != 'Baseline' ">
+    <ProjectReference Include="..\DemoFile.Game.Cs\DemoFile.Game.Cs.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Baseline' ">
+    <PackageReference Include="DemoFile.Game.Cs" Version="*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\demos\*.dem" CopyToOutputDirectory="PreserveNewest" LinkBase="demos" />
+  </ItemGroup>
+
+</Project>

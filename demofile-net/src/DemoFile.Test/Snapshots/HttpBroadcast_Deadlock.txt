@@ -1,0 +1,3801 @@
+[<pre record>] After StartReadingAsync
+[<pre record>] GameTick: 8095, SvcServerInfo: {
+  "Protocol": 1,
+  "ServerCount": 5,
+  "IsDedicated": true,
+  "IsHltv": true,
+  "COs": 108,
+  "MaxClients": 32,
+  "MaxClasses": 581,
+  "PlayerSlot": 0,
+  "TickInterval": 0.015625,
+  "GameDir": "/opt/srcds/project8/citadel_v5506/citadel",
+  "MapName": "dl_midtown",
+  "SkyName": "",
+  "HostName": "SourceTV",
+  "AddonName": "",
+  "GameSessionConfig": {
+    "IsMultiplayer": true,
+    "IsLoadsavegame": false,
+    "IsBackgroundMap": false,
+    "IsHeadless": false,
+    "MinClientLimit": 1,
+    "MaxClientLimit": 32,
+    "MaxClients": 31,
+    "TickInterval": 0,
+    "Hostname": "",
+    "Savegamename": "",
+    "S1Mapname": "dl_midtown",
+    "Gamemode": "deathmatch",
+    "ServerIpAddress": "100.67.2.30:0",
+    "Data": "\u003C127 bytes\u003E",
+    "IsLocalonly": false,
+    "NoSteamServer": false,
+    "IsTransition": false,
+    "Previouslevel": "",
+    "Landmarkname": ""
+  },
+  "GameSessionManifest": "\u003C12880 bytes\u003E"
+}
+[14623] Interval snapshot:
+[14623] MoveNextAsync #1
+[14626] MoveNextAsync #2
+[14629] MoveNextAsync #3
+[14632] MoveNextAsync #4
+[14635] MoveNextAsync #5
+[14638] Event player_used_ability@14641:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 1979,
+    "Abilityname": "citadel_ability_hook",
+    "CasterEntindex": 0
+  }
+[14638] MoveNextAsync #6
+[14641] MoveNextAsync #7
+[14644] MoveNextAsync #8
+[14647] MoveNextAsync #9
+[14650] MoveNextAsync #10
+[14653] MoveNextAsync #11
+[14656] MoveNextAsync #12
+[14659] Event citadeltv_chase_hero@14662:
+  {
+    "GameEventName": "citadeltv_chase_hero",
+    "Target1": -1375369080,
+    "Target2": -1,
+    "Type": 0,
+    "Priority": 0,
+    "Gametime": 0,
+    "Highlight": false,
+    "Target1playeridIndex": {
+      "index": 13
+    },
+    "Target1playerid": {
+      "type": "CCitadelPlayerController",
+      "index": 13,
+      "serial": 598
+    },
+    "Target2playeridIndex": null,
+    "Eventtype": 0
+  }
+[14659] MoveNextAsync #13
+[14662] MoveNextAsync #14
+[14665] MoveNextAsync #15
+[14668] MoveNextAsync #16
+[14671] MoveNextAsync #17
+[14674] MoveNextAsync #18
+[14677] MoveNextAsync #19
+[14680] MoveNextAsync #20
+[14683] MoveNextAsync #21
+[14686] Event player_used_ability@14689:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 1979,
+    "Abilityname": "citadel_ability_sticky_bomb",
+    "CasterEntindex": 0
+  }
+[14686] MoveNextAsync #22
+[14689] MoveNextAsync #23
+[14692] Event player_used_ability@14695:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 1979,
+    "Abilityname": "citadel_ability_uppercut",
+    "CasterEntindex": 0
+  }
+[14692] MoveNextAsync #24
+[14695] MoveNextAsync #25
+[14698] MoveNextAsync #26
+[14701] MoveNextAsync #27
+[14704] MoveNextAsync #28
+[14707] MoveNextAsync #29
+[14710] MoveNextAsync #30
+[14713] MoveNextAsync #31
+[14716] MoveNextAsync #32
+[14719] MoveNextAsync #33
+[14722] MoveNextAsync #34
+[14725] MoveNextAsync #35
+[14728] Event player_used_ability@14731:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 2011,
+    "Abilityname": "citadel_ability_tangotether",
+    "CasterEntindex": 0
+  }
+[14728] MoveNextAsync #36
+[14731] MoveNextAsync #37
+[14734] MoveNextAsync #38
+[14737] MoveNextAsync #39
+[14740] MoveNextAsync #40
+[14743] MoveNextAsync #41
+[14746] MoveNextAsync #42
+[14749] MoveNextAsync #43
+[14752] MoveNextAsync #44
+[14755] MoveNextAsync #45
+[14758] MoveNextAsync #46
+[14761] MoveNextAsync #47
+[14764] MoveNextAsync #48
+[14767] Event player_used_ability@14770:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 1980,
+    "Abilityname": "citadel_ability_card_toss",
+    "CasterEntindex": 0
+  }
+[14767] MoveNextAsync #49
+[14770] MoveNextAsync #50
+[14773] MoveNextAsync #51
+[14776] MoveNextAsync #52
+[14779] MoveNextAsync #53
+[14782] MoveNextAsync #54
+[14785] MoveNextAsync #55
+[14788] MoveNextAsync #56
+[14791] MoveNextAsync #57
+[14794] MoveNextAsync #58
+[14797] MoveNextAsync #59
+[14800] MoveNextAsync #60
+[14803] MoveNextAsync #61
+[14806] MoveNextAsync #62
+[14809] MoveNextAsync #63
+[14812] MoveNextAsync #64
+[14815] MoveNextAsync #65
+[14818] MoveNextAsync #66
+[14821] MoveNextAsync #67
+[14824] MoveNextAsync #68
+[14827] MoveNextAsync #69
+[14830] MoveNextAsync #70
+[14833] MoveNextAsync #71
+[14836] MoveNextAsync #72
+[14839] MoveNextAsync #73
+[14842] MoveNextAsync #74
+[14845] MoveNextAsync #75
+[14848] MoveNextAsync #76
+[14851] MoveNextAsync #77
+[14854] MoveNextAsync #78
+[14857] MoveNextAsync #79
+[14860] MoveNextAsync #80
+[14863] MoveNextAsync #81
+[14866] MoveNextAsync #82
+[14869] MoveNextAsync #83
+[14872] MoveNextAsync #84
+[14875] MoveNextAsync #85
+[14878] MoveNextAsync #86
+[14881] MoveNextAsync #87
+[14884] MoveNextAsync #88
+[14887] MoveNextAsync #89
+[14890] MoveNextAsync #90
+[14893] MoveNextAsync #91
+[14896] MoveNextAsync #92
+[14899] MoveNextAsync #93
+[14902] MoveNextAsync #94
+[14905] MoveNextAsync #95
+[14908] MoveNextAsync #96
+[14911] MoveNextAsync #97
+[14914] MoveNextAsync #98
+[14917] MoveNextAsync #99
+[14920] MoveNextAsync #100
+[14923] MoveNextAsync #101
+[14926] MoveNextAsync #102
+[14929] MoveNextAsync #103
+[14932] MoveNextAsync #104
+[14935] MoveNextAsync #105
+[14938] MoveNextAsync #106
+[14941] MoveNextAsync #107
+[14944] MoveNextAsync #108
+[14947] MoveNextAsync #109
+[14950] MoveNextAsync #110
+[14953] MoveNextAsync #111
+[14956] MoveNextAsync #112
+[14959] MoveNextAsync #113
+[14962] MoveNextAsync #114
+[14965] MoveNextAsync #115
+[14968] MoveNextAsync #116
+[14971] MoveNextAsync #117
+[14974] MoveNextAsync #118
+[14977] MoveNextAsync #119
+[14980] MoveNextAsync #120
+[14983] MoveNextAsync #121
+[14986] MoveNextAsync #122
+[14989] MoveNextAsync #123
+[14992] MoveNextAsync #124
+[14995] MoveNextAsync #125
+[14998] MoveNextAsync #126
+[15001] MoveNextAsync #127
+[15004] MoveNextAsync #128
+[15007] MoveNextAsync #129
+[15010] MoveNextAsync #130
+[15013] MoveNextAsync #131
+[15016] MoveNextAsync #132
+[15019] MoveNextAsync #133
+[15022] MoveNextAsync #134
+[15025] MoveNextAsync #135
+[15028] MoveNextAsync #136
+[15031] MoveNextAsync #137
+[15034] MoveNextAsync #138
+[15037] MoveNextAsync #139
+[15040] MoveNextAsync #140
+[15043] Event citadeltv_chase_hero@15046:
+  {
+    "GameEventName": "citadeltv_chase_hero",
+    "Target1": -1375369080,
+    "Target2": -1,
+    "Type": 0,
+    "Priority": 0,
+    "Gametime": 0,
+    "Highlight": false,
+    "Target1playeridIndex": {
+      "index": 13
+    },
+    "Target1playerid": {
+      "type": "CCitadelPlayerController",
+      "index": 13,
+      "serial": 598
+    },
+    "Target2playeridIndex": null,
+    "Eventtype": 0
+  }
+[15043] MoveNextAsync #141
+[15046] MoveNextAsync #142
+[15049] MoveNextAsync #143
+[15052] MoveNextAsync #144
+[15055] MoveNextAsync #145
+[15058] MoveNextAsync #146
+[15061] MoveNextAsync #147
+[15064] MoveNextAsync #148
+[15067] MoveNextAsync #149
+[15070] MoveNextAsync #150
+[15073] MoveNextAsync #151
+[15076] MoveNextAsync #152
+[15079] MoveNextAsync #153
+[15082] MoveNextAsync #154
+[15085] MoveNextAsync #155
+[15088] MoveNextAsync #156
+[15091] MoveNextAsync #157
+[15094] MoveNextAsync #158
+[15097] MoveNextAsync #159
+[15100] MoveNextAsync #160
+[15103] MoveNextAsync #161
+[15106] MoveNextAsync #162
+[15109] MoveNextAsync #163
+[15112] MoveNextAsync #164
+[15115] Event player_used_ability@15118:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 2047,
+    "Abilityname": "citadel_ability_lash_down_strike",
+    "CasterEntindex": 0
+  }
+[15115] MoveNextAsync #165
+[15118] MoveNextAsync #166
+[15121] MoveNextAsync #167
+[15124] MoveNextAsync #168
+[15127] MoveNextAsync #169
+[15130] Event player_used_ability@15133:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 2046,
+    "Abilityname": "citadel_ability_lightning_ball",
+    "CasterEntindex": 0
+  }
+[15130] MoveNextAsync #170
+[15133] MoveNextAsync #171
+[15136] MoveNextAsync #172
+[15139] MoveNextAsync #173
+[15142] MoveNextAsync #174
+[15145] MoveNextAsync #175
+[15148] MoveNextAsync #176
+[15151] MoveNextAsync #177
+[15154] MoveNextAsync #178
+[15157] MoveNextAsync #179
+[15160] Event player_used_ability@15163:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 2012,
+    "Abilityname": "citadel_ability_nikuman",
+    "CasterEntindex": 0
+  }
+[15160] MoveNextAsync #180
+[15163] MoveNextAsync #181
+[15166] MoveNextAsync #182
+[15169] MoveNextAsync #183
+[15172] MoveNextAsync #184
+[15175] MoveNextAsync #185
+[15178] MoveNextAsync #186
+[15181] MoveNextAsync #187
+[15184] MoveNextAsync #188
+[15187] MoveNextAsync #189
+[15190] MoveNextAsync #190
+[15193] MoveNextAsync #191
+[15196] MoveNextAsync #192
+[15199] MoveNextAsync #193
+[15202] MoveNextAsync #194
+[15205] MoveNextAsync #195
+[15208] MoveNextAsync #196
+[15211] MoveNextAsync #197
+[15214] MoveNextAsync #198
+[15217] MoveNextAsync #199
+[15220] MoveNextAsync #200
+[15223] Interval snapshot:
+  {
+    "IsActive": true,
+    "PlayerName": "SourceTV",
+    "Team": "CCitadelTeam (Index = 63, Serial = 680)",
+    "ControllerHandle": {
+      "index": 1,
+      "serial": 746
+    },
+    "PawnHandle": null
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "Antoine Gunk",
+    "Team": "CCitadelTeam (Index = 64, Serial = 869)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 2,
+      "serial": 76
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 2167,
+      "serial": 176
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": -528.03125,
+      "Y": 158.09375,
+      "Z": 248.03125
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": 104.0625,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 346.98584,
+      "Yaw": 105.872,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 184
+        },
+        "CooldownEnd": {
+          "Value": 184
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 112.625
+        },
+        "CooldownEnd": {
+          "Value": 112.625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 129.8125
+        },
+        "CooldownEnd": {
+          "Value": 129.9625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 232.48438
+        },
+        "CooldownEnd": {
+          "Value": 233.33438
+        },
+        "RemainingCharges": 0,
+        "ToggleState": true,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 231.90625
+        },
+        "CooldownEnd": {
+          "Value": 231.90625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 77.78125
+        },
+        "CooldownEnd": {
+          "Value": 82.28125
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Viper_DebuffDagger",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 229.34375
+        },
+        "CooldownEnd": {
+          "Value": 235.34375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ViperVenom",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 232.73438
+        },
+        "CooldownEnd": {
+          "Value": 258.73438
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_SnakeDash",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Viper_PetrifyBola",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_ArmorUpgrade_Stimpak",
+        "AbilitySlot": "ESlot_Ability_Teleport",
+        "CooldownStart": {
+          "Value": 214.64062
+        },
+        "CooldownEnd": {
+          "Value": 278.64062
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "pk",
+    "Team": "CCitadelTeam (Index = 65, Serial = 50)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 3,
+      "serial": 664
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 2047,
+      "serial": 381
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": -665.53125,
+      "Y": 599.9375,
+      "Z": 384
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": -119.84367,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 14.245237,
+      "Yaw": 245.15877,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 179.29688
+        },
+        "CooldownEnd": {
+          "Value": 179.29688
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 231.9375
+        },
+        "CooldownEnd": {
+          "Value": 231.9375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 231.64062
+        },
+        "CooldownEnd": {
+          "Value": 231.79062
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 214.64062
+        },
+        "CooldownEnd": {
+          "Value": 215.49063
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 228.125
+        },
+        "CooldownEnd": {
+          "Value": 228.125
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 132.76562
+        },
+        "CooldownEnd": {
+          "Value": 137.26562
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_LashDownStrike",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 226.79688
+        },
+        "CooldownEnd": {
+          "Value": 235.79688
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Lash",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 229.625
+        },
+        "CooldownEnd": {
+          "Value": 231.625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Lash_Flog",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 201.01562
+        },
+        "CooldownEnd": {
+          "Value": 227.01562
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Lash_Ultimate",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_WeaponUpgrade_HeadshotBooster",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 212.875
+        },
+        "CooldownEnd": {
+          "Value": 221.375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_ArmorUpgrade_Stimpak",
+        "AbilitySlot": "ESlot_Ability_Held",
+        "CooldownStart": {
+          "Value": 154.45312
+        },
+        "CooldownEnd": {
+          "Value": 218.45312
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Upgrade_AmmoScavenger",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "asdf",
+    "Team": "CCitadelTeam (Index = 65, Serial = 50)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 4,
+      "serial": 534
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 2101,
+      "serial": 558
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": -51.375,
+      "Y": 1045.5938,
+      "Z": 376.0625
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": -125.87517,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 18.993649,
+      "Yaw": 234.43088,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_ShivWeapon",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 191.95312
+        },
+        "CooldownEnd": {
+          "Value": 191.95312
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 211.9375
+        },
+        "CooldownEnd": {
+          "Value": 212.0875
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 228.03125
+        },
+        "CooldownEnd": {
+          "Value": 228.88126
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 227.73438
+        },
+        "CooldownEnd": {
+          "Value": 227.73438
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 38,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ShivDagger",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 228.92188
+        },
+        "CooldownEnd": {
+          "Value": 230.92188
+        },
+        "RemainingCharges": 2,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ShivDash",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Shiv_Defer_Damage",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Shiv_KillingBlow",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 222.9375
+        },
+        "CooldownEnd": {
+          "Value": 231.9375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Upgrade_AmmoScavenger",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_WeaponUpgrade_HeadshotBooster",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 230.01562
+        },
+        "CooldownEnd": {
+          "Value": 238.51562
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "The Lime Tree",
+    "Team": "CCitadelTeam (Index = 64, Serial = 869)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 5,
+      "serial": 356
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 2046,
+      "serial": 218
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": 7564.5312,
+      "Y": -705.5,
+      "Z": 120.84375
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": 55.031204,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 358.24133,
+      "Yaw": 56.27748,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 182.89062
+        },
+        "CooldownEnd": {
+          "Value": 182.89062
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 138.8125
+        },
+        "CooldownEnd": {
+          "Value": 138.9625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 227.28125
+        },
+        "CooldownEnd": {
+          "Value": 228.13126
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 226.76562
+        },
+        "CooldownEnd": {
+          "Value": 226.76562
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_LightningBall",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 206.0625
+        },
+        "CooldownEnd": {
+          "Value": 214.0625
+        },
+        "RemainingCharges": 1,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_StaticCharge",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 148.46875
+        },
+        "CooldownEnd": {
+          "Value": 171.46875
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_PowerSurge",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 222.15625
+        },
+        "CooldownEnd": {
+          "Value": 270.15625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_StormCloud",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "El gatito de la toalla",
+    "Team": "CCitadelTeam (Index = 64, Serial = 869)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 6,
+      "serial": 205
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 2010,
+      "serial": 517
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": -8782.344,
+      "Y": -2052.0312,
+      "Z": 258.46875
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": -156.34369,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 15.476307,
+      "Yaw": 203.82999,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 220.29688
+        },
+        "CooldownEnd": {
+          "Value": 220.29688
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 213.65625
+        },
+        "CooldownEnd": {
+          "Value": 213.65625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 228.53125
+        },
+        "CooldownEnd": {
+          "Value": 228.68124
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 229.70312
+        },
+        "CooldownEnd": {
+          "Value": 230.55313
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 80.40625
+        },
+        "CooldownEnd": {
+          "Value": 80.40625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 227.79688
+        },
+        "CooldownEnd": {
+          "Value": 227.79688
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_GooGrenade",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 224.10938
+        },
+        "CooldownEnd": {
+          "Value": 239.35938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_RestorativeGoo",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 209.01562
+        },
+        "CooldownEnd": {
+          "Value": 251.01562
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Viscous_Telepunch",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 207.45312
+        },
+        "CooldownEnd": {
+          "Value": 208.95312
+        },
+        "RemainingCharges": 1,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_GooBowlingBall",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 38,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 218.6875
+        },
+        "CooldownEnd": {
+          "Value": 226.1875
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 208.10938
+        },
+        "CooldownEnd": {
+          "Value": 216.60938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "nujito",
+    "Team": "CCitadelTeam (Index = 64, Serial = 869)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 7,
+      "serial": 765
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 1979,
+      "serial": 664
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": -14.15625,
+      "Y": 156.28125,
+      "Z": 248.03125
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": 143.46875,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 353.6688,
+      "Yaw": 144.3869,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Bebop",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": true,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 202.34375
+        },
+        "CooldownEnd": {
+          "Value": 202.34375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 198.0625
+        },
+        "CooldownEnd": {
+          "Value": 198.2125
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 227.6875
+        },
+        "CooldownEnd": {
+          "Value": 228.5375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 149.23438
+        },
+        "CooldownEnd": {
+          "Value": 149.23438
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 227.34375
+        },
+        "CooldownEnd": {
+          "Value": 227.34375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Uppercut",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 229.9375
+        },
+        "CooldownEnd": {
+          "Value": 250.9375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_StickyBomb",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 229.67188
+        },
+        "CooldownEnd": {
+          "Value": 247.67188
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Hook",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 228.32812
+        },
+        "CooldownEnd": {
+          "Value": 251.32812
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Bebop_LaserBeam",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "Vix",
+    "Team": "CCitadelTeam (Index = 65, Serial = 50)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 8,
+      "serial": 791
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 1999,
+      "serial": 973
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": -6515.3125,
+      "Y": 3570.75,
+      "Z": 755.0625
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": -137.34387,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 0,
+      "Yaw": 214.38202,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 179.10938
+        },
+        "CooldownEnd": {
+          "Value": 179.10938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 186.23438
+        },
+        "CooldownEnd": {
+          "Value": 186.23438
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 222.29688
+        },
+        "CooldownEnd": {
+          "Value": 222.44687
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 221.45312
+        },
+        "CooldownEnd": {
+          "Value": 222.30313
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 222.5
+        },
+        "CooldownEnd": {
+          "Value": 222.5
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 209.79688
+        },
+        "CooldownEnd": {
+          "Value": 209.79688
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 120.765625
+        },
+        "CooldownEnd": {
+          "Value": 125.265625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_SleepDagger",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 206.17188
+        },
+        "CooldownEnd": {
+          "Value": 232.17188
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_SmokeBomb",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 230.28125
+        },
+        "CooldownEnd": {
+          "Value": 260.28125
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Haze_StackingDamage",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_BulletFlurry",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Upgrade_AmmoScavenger",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_WeaponUpgrade_HeadshotBooster",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 207.3125
+        },
+        "CooldownEnd": {
+          "Value": 215.8125
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "\u30AD\u30F3\u30B0\u30AE\u30C9\u30E9",
+    "Team": "CCitadelTeam (Index = 64, Serial = 869)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 9,
+      "serial": 217
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 1980,
+      "serial": 393
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": 7878.75,
+      "Y": -518.84375,
+      "Z": 120.0625
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": 79.84381,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 4.9242797,
+      "Yaw": 80.01955,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": true,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 201.03125
+        },
+        "CooldownEnd": {
+          "Value": 201.03125
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 174.17188
+        },
+        "CooldownEnd": {
+          "Value": 174.32187
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 222.98438
+        },
+        "CooldownEnd": {
+          "Value": 223.83438
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 174.35938
+        },
+        "CooldownEnd": {
+          "Value": 174.35938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 222.54688
+        },
+        "CooldownEnd": {
+          "Value": 222.54688
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_CardToss",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 231.20312
+        },
+        "CooldownEnd": {
+          "Value": 231.95312
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ProjectMind",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Wraith_RapidFire",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 223.25
+        },
+        "CooldownEnd": {
+          "Value": 271.25
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_PsychicLift",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "rg",
+    "Team": "CCitadelTeam (Index = 65, Serial = 50)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 10,
+      "serial": 621
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 2011,
+      "serial": 610
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": 8051.9688,
+      "Y": 1067.9062,
+      "Z": 248
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": -91.343765,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 8.969223,
+      "Yaw": 267.66977,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 76.75
+        },
+        "CooldownEnd": {
+          "Value": 76.75
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 231.1875
+        },
+        "CooldownEnd": {
+          "Value": 232.0375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 230.75
+        },
+        "CooldownEnd": {
+          "Value": 230.75
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Tengu_Urn",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 204.0625
+        },
+        "CooldownEnd": {
+          "Value": 212.0625
+        },
+        "RemainingCharges": 1,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_TangoTether",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 211.57812
+        },
+        "CooldownEnd": {
+          "Value": 248.57812
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_TangoTether_Trigger",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Tengu_StoneForm",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 106.140625
+        },
+        "CooldownEnd": {
+          "Value": 129.14062
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Tengu_AirLift",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "Slice And Dice",
+    "Team": "CCitadelTeam (Index = 65, Serial = 50)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 11,
+      "serial": 752
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 1938,
+      "serial": 543
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": 8517.125,
+      "Y": 154.59375,
+      "Z": 120.0625
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": 175.90622,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 10.200294,
+      "Yaw": 175.5154,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 193.85938
+        },
+        "CooldownEnd": {
+          "Value": 193.85938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 195.34375
+        },
+        "CooldownEnd": {
+          "Value": 195.49374
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 215.45312
+        },
+        "CooldownEnd": {
+          "Value": 216.30313
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 208.35938
+        },
+        "CooldownEnd": {
+          "Value": 208.35938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Nano_ClusterGrenade",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 226.64062
+        },
+        "CooldownEnd": {
+          "Value": 236.64062
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_NanoDash",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 185.96875
+        },
+        "CooldownEnd": {
+          "Value": 196.91376
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Nano_CatForm",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 231.85938
+        },
+        "CooldownEnd": {
+          "Value": 236.85938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadelBaseTriggerAbility",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ShadowPulse",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Upgrade_AmmoScavenger",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "reconcile(dynamo arc)",
+    "Team": "CCitadelTeam (Index = 65, Serial = 50)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 12,
+      "serial": 121
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 2012,
+      "serial": 718
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": -7301.625,
+      "Y": 2226.5938,
+      "Z": 248.15625
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": -73.37494,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 3.1656082,
+      "Yaw": 287.191,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 231.10938
+        },
+        "CooldownEnd": {
+          "Value": 231.10938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 192.04688
+        },
+        "CooldownEnd": {
+          "Value": 192.04688
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 210.10938
+        },
+        "CooldownEnd": {
+          "Value": 210.25937
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 231.96875
+        },
+        "CooldownEnd": {
+          "Value": 232.81876
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 231.71875
+        },
+        "CooldownEnd": {
+          "Value": 231.71875
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Stomp",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 207.21875
+        },
+        "CooldownEnd": {
+          "Value": 212.21875
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_VoidSphere",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 210.85938
+        },
+        "CooldownEnd": {
+          "Value": 226.85938
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Nikuman",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 212.64062
+        },
+        "CooldownEnd": {
+          "Value": 260.64062
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_SelfVacuum",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 230.4375
+        },
+        "CooldownEnd": {
+          "Value": 237.9375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Savior",
+        "AbilitySlot": "ESlot_Ability_Mantle",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+  {
+    "IsActive": true,
+    "PlayerName": "Joekidme",
+    "Team": "CCitadelTeam (Index = 64, Serial = 869)",
+    "IsAlive": true,
+    "ControllerHandle": {
+      "index": 13,
+      "serial": 598
+    },
+    "PawnHandle": {
+      "type": "CBasePlayerPawn",
+      "index": 2184,
+      "serial": 11
+    },
+    "PositionDeltaVelocity": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0
+    },
+    "Origin": {
+      "X": -7383.4375,
+      "Y": 1257.9688,
+      "Z": 247.5
+    },
+    "Rotation": {
+      "Pitch": 0,
+      "Yaw": -44.156113,
+      "Roll": 0
+    },
+    "EyeAngles": {
+      "Pitch": 0,
+      "Yaw": 316.03323,
+      "Roll": 0
+    },
+    "Abilities": [
+      {
+        "Name": "CCitadel_Ability_PrimaryWeapon_Empty",
+        "AbilitySlot": 40,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_HoldMelee",
+        "AbilitySlot": 42,
+        "CooldownStart": {
+          "Value": 221.17188
+        },
+        "CooldownEnd": {
+          "Value": 221.17188
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Mantle",
+        "AbilitySlot": "ESlot_Weapon_Primary",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Jump",
+        "AbilitySlot": 24,
+        "CooldownStart": {
+          "Value": 140.6875
+        },
+        "CooldownEnd": {
+          "Value": 140.8375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Slide",
+        "AbilitySlot": 26,
+        "CooldownStart": {
+          "Value": 195.8125
+        },
+        "CooldownEnd": {
+          "Value": 196.6625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine",
+        "AbilitySlot": "ESlot_Ability_Innate_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_ZipLine_Boost",
+        "AbilitySlot": 30,
+        "CooldownStart": {
+          "Value": 41.0625
+        },
+        "CooldownEnd": {
+          "Value": 321.0625
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Climb_Rope",
+        "AbilitySlot": "ESlot_None",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Dash",
+        "AbilitySlot": 32,
+        "CooldownStart": {
+          "Value": 232.46875
+        },
+        "CooldownEnd": {
+          "Value": 232.46875
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Sprint",
+        "AbilitySlot": 34,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_MeleeParry",
+        "AbilitySlot": 36,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Bull_Heal",
+        "AbilitySlot": "ESlot_Signature_First",
+        "CooldownStart": {
+          "Value": 214.67188
+        },
+        "CooldownEnd": {
+          "Value": 222.38132
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Bull_Charge",
+        "AbilitySlot": "ESlot_Signature_3",
+        "CooldownStart": {
+          "Value": 209.03125
+        },
+        "CooldownEnd": {
+          "Value": 227.03125
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_PassiveBeefy",
+        "AbilitySlot": "ESlot_ActiveItem_1",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Ability_Bull_Leap",
+        "AbilitySlot": "ESlot_ActiveItem_3",
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 218.84375
+        },
+        "CooldownEnd": {
+          "Value": 226.34375
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      },
+      {
+        "Name": "CCitadel_Item_Empty",
+        "AbilitySlot": 44,
+        "CooldownStart": {
+          "Value": 0
+        },
+        "CooldownEnd": {
+          "Value": 0
+        },
+        "RemainingCharges": 0,
+        "ToggleState": false,
+        "Channeling": false
+      }
+    ]
+  }
+[15223] Event player_used_ability@15226:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 2167,
+    "Abilityname": "ability_viper_debuffdagger",
+    "CasterEntindex": 0
+  }
+[15223] MoveNextAsync #201
+[15226] MoveNextAsync #202
+[15229] MoveNextAsync #203
+[15232] MoveNextAsync #204
+[15235] MoveNextAsync #205
+[15238] MoveNextAsync #206
+[15241] MoveNextAsync #207
+[15244] MoveNextAsync #208
+[15247] MoveNextAsync #209
+[15250] MoveNextAsync #210
+[15253] MoveNextAsync #211
+[15256] MoveNextAsync #212
+[15259] MoveNextAsync #213
+[15262] MoveNextAsync #214
+[15265] MoveNextAsync #215
+[15268] MoveNextAsync #216
+[15271] MoveNextAsync #217
+[15274] MoveNextAsync #218
+[15277] MoveNextAsync #219
+[15280] MoveNextAsync #220
+[15283] MoveNextAsync #221
+[15286] MoveNextAsync #222
+[15289] MoveNextAsync #223
+[15292] MoveNextAsync #224
+[15295] MoveNextAsync #225
+[15298] MoveNextAsync #226
+[15301] MoveNextAsync #227
+[15304] MoveNextAsync #228
+[15307] MoveNextAsync #229
+[15310] MoveNextAsync #230
+[15313] MoveNextAsync #231
+[15316] MoveNextAsync #232
+[15319] MoveNextAsync #233
+[15322] MoveNextAsync #234
+[15325] MoveNextAsync #235
+[15328] MoveNextAsync #236
+[15331] MoveNextAsync #237
+[15334] MoveNextAsync #238
+[15337] MoveNextAsync #239
+[15340] MoveNextAsync #240
+[15343] MoveNextAsync #241
+[15346] MoveNextAsync #242
+[15349] MoveNextAsync #243
+[15352] MoveNextAsync #244
+[15355] MoveNextAsync #245
+[15358] MoveNextAsync #246
+[15361] MoveNextAsync #247
+[15364] MoveNextAsync #248
+[15367] MoveNextAsync #249
+[15370] Event player_used_ability@15373:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 2047,
+    "Abilityname": "upgrade_health_stimpak",
+    "CasterEntindex": 0
+  }
+[15370] MoveNextAsync #250
+[15373] MoveNextAsync #251
+[15376] MoveNextAsync #252
+[15379] MoveNextAsync #253
+[15382] MoveNextAsync #254
+[15385] MoveNextAsync #255
+[15388] MoveNextAsync #256
+[15391] MoveNextAsync #257
+[15394] MoveNextAsync #258
+[15397] MoveNextAsync #259
+[15400] MoveNextAsync #260
+[15403] MoveNextAsync #261
+[15406] MoveNextAsync #262
+[15409] MoveNextAsync #263
+[15412] MoveNextAsync #264
+[15415] MoveNextAsync #265
+[15418] MoveNextAsync #266
+[15421] MoveNextAsync #267
+[15424] MoveNextAsync #268
+[15427] Event citadeltv_chase_hero@15430:
+  {
+    "GameEventName": "citadeltv_chase_hero",
+    "Target1": -1375369080,
+    "Target2": -1,
+    "Type": 0,
+    "Priority": 0,
+    "Gametime": 0,
+    "Highlight": false,
+    "Target1playeridIndex": {
+      "index": 13
+    },
+    "Target1playerid": {
+      "type": "CCitadelPlayerController",
+      "index": 13,
+      "serial": 598
+    },
+    "Target2playeridIndex": null,
+    "Eventtype": 0
+  }
+[15427] MoveNextAsync #269
+[15430] Event player_used_ability@15433:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 1980,
+    "Abilityname": "citadel_ability_card_toss",
+    "CasterEntindex": 0
+  }
+[15430] MoveNextAsync #270
+[15433] MoveNextAsync #271
+[15436] MoveNextAsync #272
+[15439] MoveNextAsync #273
+[15442] MoveNextAsync #274
+[15445] MoveNextAsync #275
+[15448] Event player_used_ability@15451:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 2011,
+    "Abilityname": "citadel_ability_tengu_urn",
+    "CasterEntindex": 0
+  }
+[15448] MoveNextAsync #276
+[15451] MoveNextAsync #277
+[15454] MoveNextAsync #278
+[15457] Event player_used_ability@15460:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 1999,
+    "Abilityname": "ability_sleep_dagger",
+    "CasterEntindex": 0
+  }
+[15457] MoveNextAsync #279
+[15460] MoveNextAsync #280
+[15463] MoveNextAsync #281
+[15466] MoveNextAsync #282
+[15469] MoveNextAsync #283
+[15472] MoveNextAsync #284
+[15475] MoveNextAsync #285
+[15478] MoveNextAsync #286
+[15481] MoveNextAsync #287
+[15484] MoveNextAsync #288
+[15487] MoveNextAsync #289
+[15490] MoveNextAsync #290
+[15493] MoveNextAsync #291
+[15496] MoveNextAsync #292
+[15499] MoveNextAsync #293
+[15502] MoveNextAsync #294
+[15505] MoveNextAsync #295
+[15508] MoveNextAsync #296
+[15511] MoveNextAsync #297
+[15514] MoveNextAsync #298
+[15517] MoveNextAsync #299
+[15520] MoveNextAsync #300
+[15523] MoveNextAsync #301
+[15526] MoveNextAsync #302
+[15529] MoveNextAsync #303
+[15532] MoveNextAsync #304
+[15535] MoveNextAsync #305
+[15538] MoveNextAsync #306
+[15541] MoveNextAsync #307
+[15544] MoveNextAsync #308
+[15547] MoveNextAsync #309
+[15550] MoveNextAsync #310
+[15553] MoveNextAsync #311
+[15556] MoveNextAsync #312
+[15559] MoveNextAsync #313
+[15562] MoveNextAsync #314
+[15565] MoveNextAsync #315
+[15568] MoveNextAsync #316
+[15571] MoveNextAsync #317
+[15574] MoveNextAsync #318
+[15577] MoveNextAsync #319
+[15580] Event player_used_ability@15583:
+  {
+    "GameEventName": "player_used_ability",
+    "EntindexPlayer": 2010,
+    "Abilityname": "viscous_goo_grenade",
+    "CasterEntindex": 0
+  }
+[15580] MoveNextAsync #320
+[15583] MoveNextAsync #321
+[15583] Finished. HTTP logs follow:
+  2024-09-22T14:00:00.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/sync'
+  2024-09-22T14:00:00.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/0/start'
+  2024-09-22T14:00:00.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/35/full'
+  2024-09-22T14:00:00.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/35/delta'
+  2024-09-22T14:00:00.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/36/delta'.  3 failures remaining
+  2024-09-22T14:00:01.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/36/delta'.  2 failures remaining
+  2024-09-22T14:00:02.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/36/delta'.  1 failures remaining
+  2024-09-22T14:00:03.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/36/delta'
+  2024-09-22T14:00:03.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  10 failures remaining
+  2024-09-22T14:00:04.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  9 failures remaining
+  2024-09-22T14:00:05.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  8 failures remaining
+  2024-09-22T14:00:06.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  7 failures remaining
+  2024-09-22T14:00:07.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  6 failures remaining
+  2024-09-22T14:00:08.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  5 failures remaining
+  2024-09-22T14:00:09.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  4 failures remaining
+  2024-09-22T14:00:10.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  3 failures remaining
+  2024-09-22T14:00:11.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  2 failures remaining
+  2024-09-22T14:00:12.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/37/delta'.  1 failures remaining
+  2024-09-22T14:00:13.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/37/delta'
+  2024-09-22T14:00:13.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  10 failures remaining
+  2024-09-22T14:00:14.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  9 failures remaining
+  2024-09-22T14:00:15.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  8 failures remaining
+  2024-09-22T14:00:16.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  7 failures remaining
+  2024-09-22T14:00:17.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  6 failures remaining
+  2024-09-22T14:00:18.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  5 failures remaining
+  2024-09-22T14:00:19.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  4 failures remaining
+  2024-09-22T14:00:20.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  3 failures remaining
+  2024-09-22T14:00:21.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  2 failures remaining
+  2024-09-22T14:00:22.0000000+00:00: Synthetic HTTP 404 for 'DeadlockHttpBroadcast_2025-02-27/38/delta'.  1 failures remaining
+  2024-09-22T14:00:23.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/38/delta'
+  2024-09-22T14:00:23.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/39/delta'
+  2024-09-22T14:00:23.0000000+00:00: Reading 'DeadlockHttpBroadcast_2025-02-27/40/delta'
+  2024-09-22T14:00:23.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:24.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:25.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:26.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:27.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:28.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:29.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:30.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:31.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:32.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  2024-09-22T14:00:33.0000000+00:00: 'DeadlockHttpBroadcast_2025-02-27/41/delta' not found => HTTP 404
+  

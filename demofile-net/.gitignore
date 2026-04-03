@@ -1,0 +1,8 @@
+obj/
+bin/
+/GameTracking-CSGO/
+*.dem
+.idea/
+.vs/
+*.DotSettings.user
+BenchmarkDotNet.Artifacts/
