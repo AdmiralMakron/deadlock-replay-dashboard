@@ -1,0 +1,13 @@
+@* Small KPI tile used in player detail view. *@
+
+<div class="card h-100">
+    <div class="card-body py-2 px-3">
+        <div class="text-muted small">@Label</div>
+        <div class="h5 mb-0">@Value</div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Label { get; set; } = "";
+    [Parameter, EditorRequired] public string Value { get; set; } = "";
+}

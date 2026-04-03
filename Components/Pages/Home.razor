@@ -1,7 +1,176 @@
-﻿@page "/"
+@page "/"
+@rendermode InteractiveServer
+@inject DeadlockReplayService Replays
+@inject NavigationManager Nav
+@implements IDisposable
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Deadlock Replay Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Deadlock Replay Dashboard</h1>
+<p class="lead">Pick a <code>.dem</code> file from the demos directory and parse it to load the post-match dashboard.</p>
 
-Welcome to your new app.
+@if (_demos.Count == 0)
+{
+    <div class="alert alert-warning">
+        No <code>.dem</code> files were found in the demos directory.
+        When running via <code>docker compose up --build</code> the bundled sample demo
+        is baked into the image at <code>/app/bundled-demos/48525700.dem</code>.
+    </div>
+}
+else
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="demo-select" class="form-label">Demo file</label>
+                <select id="demo-select" class="form-select" @bind="_selectedFile" disabled="@_isParsing">
+                    @foreach (var d in _demos)
+                    {
+                        var loaded = Replays.GetMatch(d.FileName) is not null;
+                        <option value="@d.FileName">
+                            @d.FileName (@d.DisplaySize)@(loaded ? " — already loaded" : "")
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <button class="btn btn-primary" @onclick="StartParse" disabled="@(_isParsing || string.IsNullOrEmpty(_selectedFile))">
+                @if (_isParsing)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Parsing&hellip;</span>
+                }
+                else
+                {
+                    @(_selectedFile is not null && Replays.GetMatch(_selectedFile) is not null ? "Open dashboard" : "Parse demo")
+                }
+            </button>
+        </div>
+    </div>
+}
+
+@if (_isParsing)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <p class="mb-2">Parsing <code>@_selectedFile</code> &mdash; this can take a while for large demos.</p>
+            <div class="progress" style="height: 22px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                     role="progressbar"
+                     style="width: @(Math.Round(_progress * 100))%"
+                     aria-valuenow="@(Math.Round(_progress * 100))"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    @($"{Math.Round(_progress * 100)}%")
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (_error is not null)
+{
+    <div class="alert alert-danger">
+        <strong>Parse failed:</strong> @_error
+    </div>
+}
+
+@if (Replays.LoadedMatches.Count > 0)
+{
+    <div class="card">
+        <div class="card-header">Loaded matches</div>
+        <ul class="list-group list-group-flush">
+            @foreach (var m in Replays.LoadedMatches)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="dashboard/@m.SourceFileName"><code>@m.SourceFileName</code></a>
+                        <span class="text-muted small ms-2">
+                            Match @m.Info.MatchId &middot; @FormatDuration(m.Info.DurationSeconds)
+                            &middot; @m.Deaths.Count deaths
+                        </span>
+                    </div>
+                    @if (m.Info.Winner is { } w)
+                    {
+                        <span class="badge @(w == TeamSide.Amber ? "bg-warning text-dark" : "bg-info")">@w win</span>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    private List<DemoFileInfo> _demos = new();
+    private string? _selectedFile;
+    private bool _isParsing;
+    private float _progress;
+    private string? _error;
+
+    protected override void OnInitialized()
+    {
+        _demos = Replays.ListDemos().ToList();
+        _selectedFile = _demos.FirstOrDefault()?.FileName;
+        Replays.MatchesChanged += OnMatchesChanged;
+    }
+
+    private void OnMatchesChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        Replays.MatchesChanged -= OnMatchesChanged;
+    }
+
+    private async Task StartParse()
+    {
+        if (string.IsNullOrEmpty(_selectedFile)) return;
+
+        // If we already have it parsed, just navigate.
+        if (Replays.GetMatch(_selectedFile) is not null)
+        {
+            Nav.NavigateTo($"dashboard/{_selectedFile}");
+            return;
+        }
+
+        _error = null;
+        _isParsing = true;
+        _progress = 0f;
+
+        try
+        {
+            // Marshal progress callbacks (which fire on parser thread) back to the
+            // Blazor render thread, throttling so we don't flood the UI.
+            var lastReport = DateTime.MinValue;
+            void OnProgress(float p)
+            {
+                var now = DateTime.UtcNow;
+                if (p < 1f && (now - lastReport).TotalMilliseconds < 200) return;
+                lastReport = now;
+                _progress = p;
+                _ = InvokeAsync(StateHasChanged);
+            }
+
+            await Replays.ParseAsync(_selectedFile, OnProgress);
+            _progress = 1f;
+            _isParsing = false;
+            Nav.NavigateTo($"dashboard/{_selectedFile}");
+            return;
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _isParsing = false;
+            StateHasChanged();
+        }
+    }
+
+    private static string FormatDuration(float seconds)
+    {
+        if (seconds <= 0) return "—";
+        var ts = TimeSpan.FromSeconds(seconds);
+        return ts.Hours > 0 ? $"{ts.Hours}h {ts.Minutes:00}m {ts.Seconds:00}s" : $"{ts.Minutes}m {ts.Seconds:00}s";
+    }
+}

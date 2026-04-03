@@ -1,0 +1,115 @@
+@page "/dashboard/{FileName}"
+@rendermode InteractiveServer
+@inject DeadlockReplayService Replays
+@inject NavigationManager Nav
+
+<PageTitle>@Title</PageTitle>
+
+@{
+    var match = Replays.GetMatch(FileName);
+}
+
+@if (match is null)
+{
+    <div class="alert alert-info">
+        No match has been parsed for <code>@FileName</code>.
+        <a href="/" class="alert-link">Go back home and parse this demo</a> first.
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-start flex-wrap mb-3">
+        <div>
+            <h1 class="h3 mb-1">@Title</h1>
+            <div class="text-muted small">
+                Match @match.Info.MatchId &middot;
+                @FormatDuration(match.Info.DurationSeconds)
+                @if (match.Info.Winner is { } w)
+                {
+                    <span> &middot; Winner: <strong class="@(w == TeamSide.Amber ? "text-warning" : "text-info")">@w</strong></span>
+                    <span> &middot; @match.Info.AmberScore – @match.Info.SapphireScore</span>
+                }
+            </div>
+        </div>
+        <a href="/" class="btn btn-outline-secondary btn-sm">&larr; Pick a different demo</a>
+    </div>
+
+    <ul class="nav nav-tabs mb-3">
+        @foreach (var t in _tabs)
+        {
+            <li class="nav-item">
+                <button type="button"
+                        class="nav-link @(_activeTab == t.Key ? "active" : "")"
+                        @onclick="() => SetTab(t.Key)">@t.Value</button>
+            </li>
+        }
+    </ul>
+
+    @if (_activeTab == Tab.Timeline)
+    {
+        <TimelineView Match="match" />
+    }
+    else if (_activeTab == Tab.Comparison)
+    {
+        <ComparisonView Match="match" OnPlayerSelected="OnPlayerSelectedFromComparison" />
+    }
+    else if (_activeTab == Tab.Player)
+    {
+        <PlayerDetailView Match="match" InitialPlayerSteamId="@_jumpToPlayer" />
+    }
+}
+
+@code {
+    [Parameter] public string FileName { get; set; } = "";
+
+    private enum Tab { Timeline, Comparison, Player }
+
+    private static readonly Dictionary<Tab, string> _tabs = new()
+    {
+        [Tab.Timeline] = "Timeline",
+        [Tab.Comparison] = "Player comparison",
+        [Tab.Player] = "Player detail",
+    };
+
+    private Tab _activeTab = Tab.Timeline;
+    private ulong _jumpToPlayer; // 0 = none
+
+    /// <summary>Title shown in the header and the browser tab — the .dem filename without the extension.</summary>
+    private string Title => string.IsNullOrEmpty(FileName)
+        ? "Dashboard"
+        : Path.GetFileNameWithoutExtension(FileName);
+
+    protected override void OnParametersSet()
+    {
+        // When the user navigates between matches via the left nav, reset to Timeline
+        // and clear any cross-tab jump state so the new match opens cleanly.
+        // (We don't reset on every render, only when FileName actually changes.)
+        if (FileName != _lastFileName)
+        {
+            _lastFileName = FileName;
+            _activeTab = Tab.Timeline;
+            _jumpToPlayer = 0;
+        }
+    }
+    private string _lastFileName = "";
+
+    private void SetTab(Tab t)
+    {
+        _activeTab = t;
+        // Manual tab clicks shouldn't carry the cross-tab jump forward.
+        if (t != Tab.Player) _jumpToPlayer = 0;
+    }
+
+    private void OnPlayerSelectedFromComparison(ulong steamId)
+    {
+        _jumpToPlayer = steamId;
+        _activeTab = Tab.Player;
+    }
+
+    private static string FormatDuration(float seconds)
+    {
+        if (seconds <= 0) return "—";
+        var ts = TimeSpan.FromSeconds(seconds);
+        return ts.Hours > 0 ? $"{ts.Hours}h {ts.Minutes:00}m {ts.Seconds:00}s" : $"{ts.Minutes}m {ts.Seconds:00}s";
+    }
+}

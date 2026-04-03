@@ -21,12 +21,14 @@ WORKDIR /app
 # Install curl for pulling demo files
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
-# Create demos directory
-RUN mkdir -p /app/demos
+# Create demo directories.
+#  - /app/demos        : bind-mount target for user-supplied .dem files (docker-compose maps ./demos here)
+#  - /app/bundled-demos: baked into the image so the sample demo is always available even when /app/demos is mounted empty
+RUN mkdir -p /app/demos /app/bundled-demos
 
-# Pull demo files from GitHub Release
-RUN curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/48525700.dem -o /app/demos/48525700.dem \
-    && echo "5aa5e9840f1c5ab7162defe0732e311698af95f27d330554c30a9c4d7a0d3c61  /app/demos/48525700.dem" | sha256sum -c -
+# Pull bundled sample demo from GitHub Release into the image.
+RUN curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/48525700.dem -o /app/bundled-demos/48525700.dem \
+    && echo "5aa5e9840f1c5ab7162defe0732e311698af95f27d330554c30a9c4d7a0d3c61  /app/bundled-demos/48525700.dem" | sha256sum -c -
 
 # Copy published app from build stage
 COPY --from=build /app/publish ./

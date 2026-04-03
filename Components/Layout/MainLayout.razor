@@ -1,15 +1,34 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+
+@*
+    Hamburger sidebar pattern: a hidden checkbox above .page captures the
+    drawer's open/closed state. Sibling CSS in MainLayout.razor.css selects
+    .nav-toggle:checked ~ .page .sidebar to slide it in. Pure CSS, no JS.
+*@
+<input type="checkbox" id="dl-nav-toggle" class="nav-toggle" />
 
 <div class="page">
-    <div class="sidebar">
+    <header class="top-row">
+        <label for="dl-nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation menu">
+            <span class="hamburger-bars"></span>
+        </label>
+        <a href="" class="brand-link">Deadlock Dashboard</a>
+        <div class="top-row-spacer"></div>
+        <a href="https://github.com/AdmiralMakron/deadlock-replay-dashboard"
+           target="_blank" rel="noopener noreferrer"
+           class="external-link">
+            GitHub
+        </a>
+    </header>
+
+    <aside class="sidebar">
         <NavMenu />
-    </div>
+    </aside>
+
+    @* Backdrop sits behind the drawer; clicking it closes the menu. *@
+    <label for="dl-nav-toggle" class="sidebar-backdrop" aria-hidden="true"></label>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
         <article class="content px-4">
             @Body
         </article>

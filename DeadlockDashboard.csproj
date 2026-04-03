@@ -11,4 +11,16 @@
     <PackageReference Include="DemoFile.Game.Deadlock" Version="0.41.2" />
   </ItemGroup>
 
+  <!--
+    The demofile-net/ folder is a vendored copy of the upstream library kept for
+    reference only — exclude it from compile/embed/wwwroot scans so it doesn't
+    collide with the NuGet package above.
+  -->
+  <ItemGroup>
+    <Compile Remove="demofile-net/**" />
+    <Content Remove="demofile-net/**" />
+    <None Remove="demofile-net/**" />
+    <EmbeddedResource Remove="demofile-net/**" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,260 @@
+@* Comparison view: bar chart comparing a chosen stat across all players. *@
+
+<div class="row g-3 mb-3">
+    <div class="col-md-4">
+        <label class="form-label">Stat</label>
+        <select class="form-select" @bind="_selectedStat">
+            @foreach (var s in Stats)
+            {
+                <option value="@s.Key">@s.Value.Label</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Filter by team</label>
+        <select class="form-select" @bind="_teamFilter">
+            <option value="@TeamFilter.Both">Both teams</option>
+            <option value="@TeamFilter.Amber">Amber only</option>
+            <option value="@TeamFilter.Sapphire">Sapphire only</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Sort</label>
+        <select class="form-select" @bind="_sortDirection">
+            <option value="@SortDir.Desc">Highest first</option>
+            <option value="@SortDir.Asc">Lowest first</option>
+        </select>
+    </div>
+</div>
+
+<Chart Config="@BuildConfig()" Height="420px" OnPointClicked="OnBarClicked" />
+<p class="text-muted small mt-1 mb-0">Click a bar (or a player name in the scoreboard) to open that player's detail tab.</p>
+
+<h2 class="h5 mt-4">Scoreboard</h2>
+<p class="text-muted small mb-2">Click a column header to sort the scoreboard independently of the chart.</p>
+<div class="table-responsive">
+    <table class="table table-sm table-striped table-hover">
+        <thead>
+            <tr>
+                <th>@SortableHeader(ScoreSortKey.Name, "Player")</th>
+                <th>Team</th>
+                <th class="text-end">@SortableHeader(ScoreSortKey.Kills, "K")</th>
+                <th class="text-end">@SortableHeader(ScoreSortKey.Deaths, "D")</th>
+                <th class="text-end">@SortableHeader(ScoreSortKey.Assists, "A")</th>
+                <th class="text-end">@SortableHeader(ScoreSortKey.NetWorth, "Net worth")</th>
+                <th class="text-end">@SortableHeader(ScoreSortKey.HeroDamage, "Hero dmg")</th>
+                <th class="text-end">@SortableHeader(ScoreSortKey.ObjDamage, "Obj dmg")</th>
+                <th class="text-end">@SortableHeader(ScoreSortKey.LastHits, "Last hits")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in ScoreboardPlayers)
+            {
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-link p-0 align-baseline text-start"
+                                @onclick="() => OnPlayerNameClicked(p.SteamId)">
+                            @p.DisplayLabel
+                        </button>
+                    </td>
+                    <td class="@TeamTextClass(p.Team)">@p.Team</td>
+                    <td class="text-end">@p.Kills</td>
+                    <td class="text-end">@p.Deaths</td>
+                    <td class="text-end">@p.Assists</td>
+                    <td class="text-end">@p.NetWorth.ToString("N0")</td>
+                    <td class="text-end">@p.HeroDamage.ToString("N0")</td>
+                    <td class="text-end">@p.ObjectiveDamage.ToString("N0")</td>
+                    <td class="text-end">@p.LastHits</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public MatchData Match { get; set; } = default!;
+    /// <summary>Raised when the user wants to drill into a specific player.</summary>
+    [Parameter] public EventCallback<ulong> OnPlayerSelected { get; set; }
+
+    private enum TeamFilter { Both, Amber, Sapphire }
+    private enum SortDir { Desc, Asc }
+    private enum ScoreSortKey { Name, Kills, Deaths, Assists, NetWorth, HeroDamage, ObjDamage, LastHits }
+
+    private string _selectedStat = "Kills";
+    private TeamFilter _teamFilter = TeamFilter.Both;
+    private SortDir _sortDirection = SortDir.Desc;
+
+    // Independent scoreboard sort state.
+    private ScoreSortKey _scoreSort = ScoreSortKey.Kills;
+    private SortDir _scoreSortDir = SortDir.Desc;
+
+    private record StatDef(string Label, Func<PlayerSummary, int> Getter);
+
+    private static readonly Dictionary<string, StatDef> Stats = new()
+    {
+        ["Kills"] = new("Kills", p => p.Kills),
+        ["Deaths"] = new("Deaths", p => p.Deaths),
+        ["Assists"] = new("Assists", p => p.Assists),
+        ["NetWorth"] = new("Net worth (souls)", p => p.NetWorth),
+        ["HeroDamage"] = new("Player damage", p => p.HeroDamage),
+        ["ObjectiveDamage"] = new("Objective damage", p => p.ObjectiveDamage),
+        ["HeroHealing"] = new("Healing", p => p.HeroHealing),
+        ["LastHits"] = new("Last hits", p => p.LastHits),
+        ["Denies"] = new("Denies", p => p.Denies),
+        ["Level"] = new("Level", p => p.Level),
+    };
+
+    /// <summary>Players that pass the team filter, in chart-display order (driven by stat dropdown + sort dir).</summary>
+    private List<PlayerSummary> ChartPlayers
+    {
+        get
+        {
+            IEnumerable<PlayerSummary> q = Match.Players.Where(p => p.Team == TeamSide.Amber || p.Team == TeamSide.Sapphire);
+            q = _teamFilter switch
+            {
+                TeamFilter.Amber => q.Where(p => p.Team == TeamSide.Amber),
+                TeamFilter.Sapphire => q.Where(p => p.Team == TeamSide.Sapphire),
+                _ => q,
+            };
+            var stat = Stats[_selectedStat];
+            q = _sortDirection == SortDir.Desc ? q.OrderByDescending(stat.Getter) : q.OrderBy(stat.Getter);
+            return q.ToList();
+        }
+    }
+
+    /// <summary>Players for the scoreboard, ordered by the per-column sort state.</summary>
+    private List<PlayerSummary> ScoreboardPlayers
+    {
+        get
+        {
+            IEnumerable<PlayerSummary> q = Match.Players.Where(p => p.Team == TeamSide.Amber || p.Team == TeamSide.Sapphire);
+            q = _teamFilter switch
+            {
+                TeamFilter.Amber => q.Where(p => p.Team == TeamSide.Amber),
+                TeamFilter.Sapphire => q.Where(p => p.Team == TeamSide.Sapphire),
+                _ => q,
+            };
+            // Project sort key. For Name we sort lexicographically; everything else by int.
+            if (_scoreSort == ScoreSortKey.Name)
+            {
+                q = _scoreSortDir == SortDir.Desc
+                    ? q.OrderByDescending(p => p.DisplayLabel, StringComparer.OrdinalIgnoreCase)
+                    : q.OrderBy(p => p.DisplayLabel, StringComparer.OrdinalIgnoreCase);
+            }
+            else
+            {
+                Func<PlayerSummary, int> sel = _scoreSort switch
+                {
+                    ScoreSortKey.Kills => p => p.Kills,
+                    ScoreSortKey.Deaths => p => p.Deaths,
+                    ScoreSortKey.Assists => p => p.Assists,
+                    ScoreSortKey.NetWorth => p => p.NetWorth,
+                    ScoreSortKey.HeroDamage => p => p.HeroDamage,
+                    ScoreSortKey.ObjDamage => p => p.ObjectiveDamage,
+                    ScoreSortKey.LastHits => p => p.LastHits,
+                    _ => p => 0,
+                };
+                q = _scoreSortDir == SortDir.Desc ? q.OrderByDescending(sel) : q.OrderBy(sel);
+            }
+            return q.ToList();
+        }
+    }
+
+    private RenderFragment SortableHeader(ScoreSortKey key, string label) => __builder =>
+    {
+        var isActive = _scoreSort == key;
+        var arrow = isActive ? (_scoreSortDir == SortDir.Desc ? " ▼" : " ▲") : "";
+        <button type="button"
+                class="btn btn-link p-0 fw-semibold text-decoration-none @(isActive ? "" : "text-muted")"
+                @onclick="() => ToggleScoreSort(key)">
+            @label@arrow
+        </button>;
+    };
+
+    private void ToggleScoreSort(ScoreSortKey key)
+    {
+        if (_scoreSort == key)
+        {
+            _scoreSortDir = _scoreSortDir == SortDir.Desc ? SortDir.Asc : SortDir.Desc;
+        }
+        else
+        {
+            _scoreSort = key;
+            // Default direction: descending for numeric, ascending for name.
+            _scoreSortDir = key == ScoreSortKey.Name ? SortDir.Asc : SortDir.Desc;
+        }
+    }
+
+    private async Task OnBarClicked(int dataIndex)
+    {
+        var players = ChartPlayers;
+        if (dataIndex < 0 || dataIndex >= players.Count) return;
+        if (OnPlayerSelected.HasDelegate)
+            await OnPlayerSelected.InvokeAsync(players[dataIndex].SteamId);
+    }
+
+    private async Task OnPlayerNameClicked(ulong steamId)
+    {
+        if (OnPlayerSelected.HasDelegate)
+            await OnPlayerSelected.InvokeAsync(steamId);
+    }
+
+    private object BuildConfig()
+    {
+        var stat = Stats[_selectedStat];
+        var players = ChartPlayers;
+        var labels = players.Select(p => p.DisplayLabel).ToArray();
+        var values = players.Select(p => stat.Getter(p)).ToArray();
+        var colors = players.Select(p => TeamHex(p.Team)).ToArray();
+
+        return new
+        {
+            type = "bar",
+            data = new
+            {
+                labels,
+                datasets = new[]
+                {
+                    new
+                    {
+                        label = stat.Label,
+                        data = values,
+                        backgroundColor = colors,
+                        borderColor = colors,
+                        borderWidth = 1,
+                    },
+                },
+            },
+            options = new
+            {
+                indexAxis = "y",
+                responsive = true,
+                maintainAspectRatio = false,
+                plugins = new
+                {
+                    legend = new { display = false },
+                    title = new { display = true, text = $"{stat.Label} by player" },
+                },
+                scales = new
+                {
+                    x = new { beginAtZero = true, title = new { display = true, text = stat.Label } },
+                },
+                deadlockExtras = new { onClickIndex = true },
+            },
+        };
+    }
+
+    private static string TeamHex(TeamSide team) => team switch
+    {
+        TeamSide.Amber => "#E8943A",
+        TeamSide.Sapphire => "#3A7BD5",
+        _ => "#9A9AAE",
+    };
+
+    private static string TeamTextClass(TeamSide team) => team switch
+    {
+        TeamSide.Amber => "text-warning fw-semibold",
+        TeamSide.Sapphire => "text-info fw-semibold",
+        _ => "text-muted",
+    };
+}

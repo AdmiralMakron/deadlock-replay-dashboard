@@ -1,0 +1,241 @@
+@* Player detail: drill into one player's stats and kill/death timeline. *@
+
+<div class="row g-3 mb-3">
+    <div class="col-md-5">
+        <label class="form-label">Player</label>
+        <select class="form-select" @bind="_selectedSteamId">
+            @foreach (var p in Match.Players.Where(p => p.Team == TeamSide.Amber || p.Team == TeamSide.Sapphire))
+            {
+                <option value="@p.SteamId">@p.DisplayLabel (@p.Team)</option>
+            }
+        </select>
+    </div>
+</div>
+
+@if (Selected is { } sel)
+{
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <StatTile Label="Kills / Deaths / Assists" Value="@($"{sel.Kills} / {sel.Deaths} / {sel.Assists}")" />
+        </div>
+        <div class="col-md-3">
+            <StatTile Label="Net worth" Value="@sel.NetWorth.ToString("N0")" />
+        </div>
+        <div class="col-md-3">
+            <StatTile Label="Player damage" Value="@sel.HeroDamage.ToString("N0")" />
+        </div>
+        <div class="col-md-3">
+            <StatTile Label="Objective damage" Value="@sel.ObjectiveDamage.ToString("N0")" />
+        </div>
+        <div class="col-md-3">
+            <StatTile Label="Last hits" Value="@sel.LastHits.ToString()" />
+        </div>
+        <div class="col-md-3">
+            <StatTile Label="Denies" Value="@sel.Denies.ToString()" />
+        </div>
+        <div class="col-md-3">
+            <StatTile Label="Healing" Value="@sel.HeroHealing.ToString("N0")" />
+        </div>
+        <div class="col-md-3">
+            <StatTile Label="Level" Value="@sel.Level.ToString()" />
+        </div>
+    </div>
+
+    <h2 class="h6">Cumulative kills &amp; deaths</h2>
+    <Chart Config="@BuildKillTimelineConfig(sel)" Height="320px" />
+    <p class="text-muted small mt-1 mb-0">Hover a point — the tooltip names the player who was killed (Kills line) or who killed @sel.DisplayLabel (Deaths line) at that step.</p>
+
+    <h2 class="h6 mt-4">Combat log</h2>
+    @if (CombatLog(sel).Count == 0)
+    {
+        <p class="text-muted small">No combat events.</p>
+    }
+    else
+    {
+        <div class="table-responsive" style="max-height: 320px; overflow-y: auto;">
+            <table class="table table-sm table-striped table-hover mb-0">
+                <thead class="sticky-top bg-light">
+                    <tr><th>Time</th><th>Result</th><th>Other player</th><th>Kill source</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in CombatLog(sel))
+                    {
+                        <tr>
+                            <td class="text-nowrap"><code>@FormatTime(row.Death.GameTimeSeconds)</code></td>
+                            <td>
+                                @if (row.IsKill)
+                                {
+                                    <span class="badge bg-success">Kill</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Death</span>
+                                }
+                            </td>
+                            <td>@row.OtherName</td>
+                            <td class="text-muted small">@row.Death.KillSource</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+@code {
+    [Parameter, EditorRequired] public MatchData Match { get; set; } = default!;
+    /// <summary>If non-zero, pre-select this player on first render (used by cross-tab navigation).</summary>
+    [Parameter] public ulong InitialPlayerSteamId { get; set; }
+
+    private ulong _selectedSteamId;
+    private ulong _lastInitialApplied;
+
+    protected override void OnParametersSet()
+    {
+        // If the parent supplied a fresh InitialPlayerSteamId, honour it (overrides current selection).
+        if (InitialPlayerSteamId != 0 && InitialPlayerSteamId != _lastInitialApplied
+            && Match.Players.Any(p => p.SteamId == InitialPlayerSteamId))
+        {
+            _selectedSteamId = InitialPlayerSteamId;
+            _lastInitialApplied = InitialPlayerSteamId;
+            return;
+        }
+        if (_selectedSteamId == 0 || Match.Players.All(p => p.SteamId != _selectedSteamId))
+        {
+            _selectedSteamId = Match.Players
+                .FirstOrDefault(p => p.Team == TeamSide.Amber || p.Team == TeamSide.Sapphire)?.SteamId ?? 0UL;
+        }
+    }
+
+    private PlayerSummary? Selected => Match.Players.FirstOrDefault(p => p.SteamId == _selectedSteamId);
+
+    private record CombatRow(DeathEvent Death, bool IsKill, string OtherName);
+
+    private List<CombatRow> CombatLog(PlayerSummary p)
+    {
+        var rows = new List<CombatRow>();
+        foreach (var d in Match.Deaths)
+        {
+            if (d.AttackerSteamId == p.SteamId && d.VictimSteamId != p.SteamId)
+                rows.Add(new CombatRow(d, IsKill: true, d.VictimName));
+            else if (d.VictimSteamId == p.SteamId)
+                rows.Add(new CombatRow(d, IsKill: false, d.AttackerName));
+        }
+        return rows;
+    }
+
+    /// <summary>
+    /// Build a step-line chart of cumulative kills and cumulative deaths for the
+    /// selected player. Each step corresponds to one combat event involving them,
+    /// and the tooltip metadata names the other player from that event.
+    /// </summary>
+    private object BuildKillTimelineConfig(PlayerSummary p)
+    {
+        // Walk every death event in chronological order, accumulating two parallel
+        // counters. Whenever the selected player is involved, drop a point on the
+        // appropriate dataset and stamp the "other player" string into the meta.
+        var killPoints = new List<(double t, int n, string other)>();
+        var deathPoints = new List<(double t, int n, string other)>();
+        int killCount = 0, deathCount = 0;
+
+        // Match.Deaths is built in event order, but defensively re-sort by time.
+        var ordered = Match.Deaths.OrderBy(d => d.GameTimeSeconds);
+        foreach (var d in ordered)
+        {
+            bool isKill = d.AttackerSteamId == p.SteamId && d.VictimSteamId != p.SteamId;
+            bool isDeath = d.VictimSteamId == p.SteamId;
+            if (isKill)
+            {
+                killCount++;
+                killPoints.Add((d.GameTimeSeconds, killCount, d.VictimName));
+            }
+            if (isDeath)
+            {
+                deathCount++;
+                deathPoints.Add((d.GameTimeSeconds, deathCount, d.AttackerName));
+            }
+        }
+
+        // Always anchor both lines at (0,0) so they have a sensible start.
+        // x is in MINUTES (game time / 60) so the chart axis reads cleanly.
+        var killXY = new[] { new { x = 0.0, y = 0 } }
+            .Concat(killPoints.Select(pt => new { x = pt.t / 60.0, y = pt.n })).ToArray();
+        var deathXY = new[] { new { x = 0.0, y = 0 } }
+            .Concat(deathPoints.Select(pt => new { x = pt.t / 60.0, y = pt.n })).ToArray();
+
+        // tooltipMeta lines up positionally with the data array. Index 0 is the
+        // (0,0) anchor with empty meta; the rest correspond to the points above.
+        var killMeta = new[] { "" }.Concat(killPoints.Select(pt => $"killed {pt.other}")).ToArray();
+        var deathMeta = new[] { "" }.Concat(deathPoints.Select(pt => $"killed by {pt.other}")).ToArray();
+
+        var endMinutes = Math.Max(1.0, Math.Ceiling(Match.Info.DurationSeconds / 60.0));
+
+        return new
+        {
+            type = "line",
+            data = new
+            {
+                datasets = new object[]
+                {
+                    new
+                    {
+                        label = "Kills",
+                        data = killXY,
+                        borderColor = "#5DAA68",
+                        backgroundColor = "rgba(93,170,104,0.15)",
+                        stepped = true,
+                        pointRadius = 3,
+                        tension = 0,
+                    },
+                    new
+                    {
+                        label = "Deaths",
+                        data = deathXY,
+                        borderColor = "#D43A3A",
+                        backgroundColor = "rgba(212,58,58,0.15)",
+                        stepped = true,
+                        pointRadius = 3,
+                        tension = 0,
+                    },
+                },
+            },
+            options = new
+            {
+                responsive = true,
+                maintainAspectRatio = false,
+                interaction = new { mode = "nearest", intersect = false },
+                scales = new
+                {
+                    x = new
+                    {
+                        type = "linear",
+                        min = 0.0,
+                        max = endMinutes,
+                        title = new { display = true, text = "Game time (minutes)" },
+                        ticks = new { stepSize = 1.0, precision = 0 },
+                    },
+                    y = new
+                    {
+                        beginAtZero = true,
+                        ticks = new { stepSize = 1 },
+                        title = new { display = true, text = "Cumulative count" },
+                    },
+                },
+                deadlockExtras = new
+                {
+                    tooltipMeta = new Dictionary<string, string[]>
+                    {
+                        ["Kills"] = killMeta,
+                        ["Deaths"] = deathMeta,
+                    },
+                },
+            },
+        };
+    }
+
+    private static string FormatTime(float seconds)
+    {
+        var ts = TimeSpan.FromSeconds(Math.Max(0, seconds));
+        return ts.Hours > 0 ? $"{ts.Hours}:{ts.Minutes:00}:{ts.Seconds:00}" : $"{ts.Minutes}:{ts.Seconds:00}";
+    }
+}

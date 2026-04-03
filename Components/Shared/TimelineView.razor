@@ -1,0 +1,264 @@
+@* Timeline view: net worth advantage over time, with team filter and time range. *@
+
+<div class="row g-3 mb-3">
+    <div class="col-md-4">
+        <label class="form-label">View</label>
+        <select class="form-select" @bind="_viewMode">
+            <option value="@ViewMode.Advantage">Soul advantage (Amber − Sapphire)</option>
+            <option value="@ViewMode.PerTeam">Per-team net worth</option>
+            <option value="@ViewMode.PerPlayer">Per-player net worth</option>
+        </select>
+    </div>
+
+    @if (_viewMode == ViewMode.PerPlayer)
+    {
+        <div class="col-md-4">
+            <label class="form-label">Filter by team</label>
+            <select class="form-select" @bind="_teamFilter">
+                <option value="@TeamFilter.Both">Both teams</option>
+                <option value="@TeamFilter.Amber">Amber only</option>
+                <option value="@TeamFilter.Sapphire">Sapphire only</option>
+            </select>
+        </div>
+    }
+
+    <div class="col-md-4">
+        <label class="form-label">Time range</label>
+        <div class="d-flex align-items-center gap-2">
+            <input type="range" class="form-range"
+                   min="@_minTime" max="@_maxTime" step="30"
+                   @bind="_endTime" @bind:event="oninput" />
+            <span class="text-muted small text-nowrap">0 → @FormatTime(_endTime)</span>
+        </div>
+    </div>
+</div>
+
+@if (_viewMode == ViewMode.PerPlayer)
+{
+    <div class="mb-3">
+        <label class="form-label small text-muted">Toggle players</label>
+        <div class="d-flex flex-wrap gap-2">
+            @foreach (var p in PlayersForFilter)
+            {
+                var active = !_hiddenSteamIds.Contains(p.SteamId);
+                <button type="button"
+                        class="btn btn-sm @(active ? TeamButtonClass(p.Team) : "btn-outline-secondary")"
+                        @onclick="() => TogglePlayer(p.SteamId)">
+                    @p.DisplayLabel
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Match.NetWorthTimeline.Count == 0)
+{
+    <div class="alert alert-secondary">No timeline samples were captured for this match.</div>
+}
+else
+{
+    <Chart Config="@BuildConfig()" Height="380px" />
+
+    <h2 class="h5 mt-4">Death timeline</h2>
+    @if (FilteredDeaths.Count == 0)
+    {
+        <p class="text-muted">No deaths in the selected time range.</p>
+    }
+    else
+    {
+        <div class="table-responsive" style="max-height: 320px; overflow-y: auto;">
+            <table class="table table-sm table-striped table-hover mb-0">
+                <thead class="sticky-top bg-light">
+                    <tr><th>Time</th><th>Killer</th><th></th><th>Victim</th><th>Kill source</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in FilteredDeaths)
+                    {
+                        <tr>
+                            <td class="text-nowrap"><code>@FormatTime(d.GameTimeSeconds)</code></td>
+                            <td class="@TeamTextClass(d.AttackerTeam)">@d.AttackerName</td>
+                            <td class="text-muted">→</td>
+                            <td class="@TeamTextClass(d.VictimTeam)">@d.VictimName</td>
+                            <td class="text-muted small">@d.KillSource</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+@code {
+    [Parameter, EditorRequired] public MatchData Match { get; set; } = default!;
+
+    private enum ViewMode { Advantage, PerTeam, PerPlayer }
+    private enum TeamFilter { Both, Amber, Sapphire }
+
+    private ViewMode _viewMode = ViewMode.Advantage;
+    private TeamFilter _teamFilter = TeamFilter.Both;
+    private float _minTime;
+    private float _maxTime;
+    private float _endTime;
+    private HashSet<ulong> _hiddenSteamIds = new();
+
+    protected override void OnParametersSet()
+    {
+        _minTime = Match.NetWorthTimeline.Count > 0 ? Match.NetWorthTimeline[0].GameTimeSeconds : 0f;
+        _maxTime = Match.NetWorthTimeline.Count > 0 ? Match.NetWorthTimeline[^1].GameTimeSeconds : Match.Info.DurationSeconds;
+        if (_endTime <= 0f || _endTime > _maxTime) _endTime = _maxTime;
+    }
+
+    private IEnumerable<PlayerSummary> PlayersForFilter =>
+        Match.Players.Where(p => _teamFilter switch
+        {
+            TeamFilter.Amber => p.Team == TeamSide.Amber,
+            TeamFilter.Sapphire => p.Team == TeamSide.Sapphire,
+            _ => p.Team == TeamSide.Amber || p.Team == TeamSide.Sapphire,
+        });
+
+    private List<DeathEvent> FilteredDeaths =>
+        Match.Deaths.Where(d => d.GameTimeSeconds <= _endTime).ToList();
+
+    private void TogglePlayer(ulong steamId)
+    {
+        if (!_hiddenSteamIds.Add(steamId)) _hiddenSteamIds.Remove(steamId);
+    }
+
+    private object BuildConfig()
+    {
+        var snaps = Match.NetWorthTimeline.Where(s => s.GameTimeSeconds <= _endTime).ToList();
+
+        // Convert seconds → minutes for the linear x-axis. Snapshots become {x,y} points.
+        var datasets = new List<object>();
+
+        if (_viewMode == ViewMode.Advantage)
+        {
+            datasets.Add(new
+            {
+                label = "Amber − Sapphire (souls)",
+                data = snaps.Select(s => new { x = s.GameTimeSeconds / 60.0, y = s.Advantage }).ToArray(),
+                borderColor = TeamAmber,
+                backgroundColor = "rgba(232,148,58,0.15)",
+                fill = true,
+                tension = 0.2,
+                pointRadius = 0,
+            });
+        }
+        else if (_viewMode == ViewMode.PerTeam)
+        {
+            datasets.Add(new
+            {
+                label = "Amber",
+                data = snaps.Select(s => new { x = s.GameTimeSeconds / 60.0, y = s.AmberTotal }).ToArray(),
+                borderColor = TeamAmber,
+                backgroundColor = "rgba(232,148,58,0.15)",
+                tension = 0.2,
+                pointRadius = 0,
+            });
+            datasets.Add(new
+            {
+                label = "Sapphire",
+                data = snaps.Select(s => new { x = s.GameTimeSeconds / 60.0, y = s.SapphireTotal }).ToArray(),
+                borderColor = TeamSapphire,
+                backgroundColor = "rgba(58,123,213,0.15)",
+                tension = 0.2,
+                pointRadius = 0,
+            });
+        }
+        else // PerPlayer
+        {
+            int colorIdx = 0;
+            foreach (var p in PlayersForFilter)
+            {
+                if (_hiddenSteamIds.Contains(p.SteamId)) continue;
+                var color = ChartSeriesColors[colorIdx % ChartSeriesColors.Length];
+                colorIdx++;
+                datasets.Add(new
+                {
+                    label = p.DisplayLabel,
+                    data = snaps.Select(s => new
+                    {
+                        x = s.GameTimeSeconds / 60.0,
+                        y = s.NetWorthBySteamId.TryGetValue(p.SteamId, out var nw) ? nw : 0,
+                    }).ToArray(),
+                    borderColor = color,
+                    backgroundColor = "transparent",
+                    tension = 0.2,
+                    pointRadius = 0,
+                    borderWidth = 1.75,
+                });
+            }
+        }
+
+        var maxMinutes = Math.Max(1.0, Math.Ceiling(_endTime / 60.0));
+
+        return new
+        {
+            type = "line",
+            data = new { datasets },
+            options = new
+            {
+                responsive = true,
+                maintainAspectRatio = false,
+                interaction = new { mode = "index", intersect = false },
+                plugins = new
+                {
+                    legend = new { position = "top" },
+                    title = new { display = true, text = TitleForView() },
+                },
+                scales = new
+                {
+                    y = new { title = new { display = true, text = "Souls" } },
+                    x = new
+                    {
+                        type = "linear",
+                        min = 0.0,
+                        max = maxMinutes,
+                        title = new { display = true, text = "Game time (minutes)" },
+                        ticks = new { stepSize = 1.0, precision = 0 },
+                    },
+                },
+                // Sort tooltip rows greatest-to-least so the team/player on top of
+                // the chart is also on top of the tooltip.
+                deadlockExtras = new { tooltipSort = "desc" },
+            },
+        };
+    }
+
+    private string TitleForView() => _viewMode switch
+    {
+        ViewMode.Advantage => "Net worth advantage (positive = Amber lead)",
+        ViewMode.PerTeam => "Total team net worth",
+        _ => "Per-player net worth",
+    };
+
+    private static string FormatTime(float seconds)
+    {
+        var ts = TimeSpan.FromSeconds(Math.Max(0, seconds));
+        return ts.Hours > 0 ? $"{ts.Hours}:{ts.Minutes:00}:{ts.Seconds:00}" : $"{ts.Minutes}:{ts.Seconds:00}";
+    }
+
+    private const string TeamAmber = "#E8943A";
+    private const string TeamSapphire = "#3A7BD5";
+
+    /// <summary>Per-player chart series colors, in palette order.</summary>
+    private static readonly string[] ChartSeriesColors =
+    {
+        "#E8943A", "#5DAA68", "#9B6FD4", "#3A7BD5",
+        "#D4A843", "#4D9D8F", "#D43A3A", "#C9ABF0",
+    };
+
+    private static string TeamButtonClass(TeamSide team) => team switch
+    {
+        TeamSide.Amber => "btn-warning",
+        TeamSide.Sapphire => "btn-info",
+        _ => "btn-secondary",
+    };
+
+    private static string TeamTextClass(TeamSide team) => team switch
+    {
+        TeamSide.Amber => "text-warning fw-semibold",
+        TeamSide.Sapphire => "text-info fw-semibold",
+        _ => "text-muted",
+    };
+}

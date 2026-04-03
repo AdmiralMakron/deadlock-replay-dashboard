@@ -1,10 +1,19 @@
 using DeadlockDashboard.Components;
+using DeadlockDashboard.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Increase Blazor SignalR limits — parsed match payloads can be large.
+builder.Services.Configure<Microsoft.AspNetCore.SignalR.HubOptions>(o =>
+{
+    o.MaximumReceiveMessageSize = 32 * 1024 * 1024; // 32 MB
+});
+
+builder.Services.AddSingleton<DeadlockReplayService>();
 
 var app = builder.Build();
 
