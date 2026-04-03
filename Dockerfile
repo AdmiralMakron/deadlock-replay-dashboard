@@ -25,9 +25,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf 
 RUN mkdir -p /app/demos
 
 # Pull demo files from GitHub Release
-RUN curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/72318302.dem -o /app/demos/72318302.dem \
-    && echo "9186988c7079cbe0c36410a2ffecf5c220c87b08782568df9b55b7d5bb619a63  /app/demos/72318302.dem" | sha256sum -c -
-
+RUN curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/48525700.dem -o /app/demos/48525700.dem \
+    && echo "5aa5e9840f1c5ab7162defe0732e311698af95f27d330554c30a9c4d7a0d3c61  /app/demos/48525700.dem" | sha256sum -c -
 
 # Copy published app from build stage
 COPY --from=build /app/publish ./

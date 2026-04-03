@@ -35,7 +35,7 @@ cd deadlock-replay-dashboard
 docker compose up --build
 ```
 
-Open `http://localhost:8080` in your browser.
+Open `http://localhost:5100` in your browser.
 
 ## Demo Files
 
@@ -43,7 +43,7 @@ The `.dem` replay files are hosted as GitHub Release assets and pulled automatic
 
 ```bash
 mkdir -p demos
-curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/72318302.dem -o demos/72318302.dem
+curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/48525700.dem -o demos/48525700.dem
 ```
 
 You can also drop any Deadlock `.dem` file into the `demos/` directory manually.
