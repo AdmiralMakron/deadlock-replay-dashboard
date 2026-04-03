@@ -29,7 +29,7 @@ Starting from this baseline, agents should implement:
 ## Quick Start
 
 ```bash
-git clone https://github.com/YOUR_USER/deadlock-replay-dashboard.git
+git clone https://github.com/AdmiralMakron/deadlock-replay-dashboard.git
 cd deadlock-replay-dashboard
 docker compose up --build
 ```
@@ -42,7 +42,7 @@ The `.dem` replay files are hosted as GitHub Release assets and pulled automatic
 
 ```bash
 mkdir -p demos
-curl -L https://github.com/YOUR_USER/deadlock-replay-dashboard/releases/download/v1.0.0/match1.dem -o demos/match1.dem
+curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/match1.dem -o demos/match1.dem
 ```
 
 You can also drop any Deadlock `.dem` file into the `demos/` directory manually.
@@ -83,5 +83,4 @@ The app will start on `http://localhost:5000` or `https://localhost:5001`.
 
 MIT — see [LICENSE](LICENSE) for details.
 
-This project uses [DemoFile.Net](https://github.com/saul/demofile-net) by Saul Rennison - see [ACKNOWLEDGEMENTS](ACKNOWLEDGEMENTS).
-```
+This project uses [DemoFile.Net](https://github.com/saul/demofile-net) by Saul Rennison — see [ACKNOWLEDGEMENTS](ACKNOWLEDGEMENTS).
