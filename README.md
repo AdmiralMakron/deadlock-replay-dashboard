@@ -8,6 +8,7 @@ This repo serves as a **clean initial state** for evaluating CLI-based LLM codin
 
 - Scaffolded Blazor Server project (.NET 10)
 - `DemoFile.Game.Deadlock` NuGet dependency (demofile-net)
+- Full demofile-net source code in `demofile-net/` for local reference
 - Multi-stage Dockerfile for reproducible builds
 - Docker Compose for one-command startup
 - Demo file pull from GitHub Releases (no large files in git)
@@ -42,7 +43,7 @@ The `.dem` replay files are hosted as GitHub Release assets and pulled automatic
 
 ```bash
 mkdir -p demos
-curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/match1.dem -o demos/match1.dem
+curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/72318302.dem -o demos/72318302.dem
 ```
 
 You can also drop any Deadlock `.dem` file into the `demos/` directory manually.
@@ -64,6 +65,7 @@ The app will start on `http://localhost:5000` or `https://localhost:5001`.
 ├── Components/
 │   ├── Layout/          # Blazor layout components
 │   └── Pages/           # Page components (dashboard goes here)
+├── demofile-net/        # demofile-net source code (local reference)
 ├── wwwroot/             # Static assets (CSS, images)
 ├── demos/               # Demo files (gitignored, pulled at build)
 ├── Program.cs           # App entry point
