@@ -4,3 +4,5 @@ demos/*.dem
 .git/
 .vs/
 demofile-net/
+*.sln
+*.slnx

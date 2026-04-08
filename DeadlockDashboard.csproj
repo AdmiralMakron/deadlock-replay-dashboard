@@ -5,10 +5,26 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
+  <!-- Exclude sub-project source files from host compilation -->
   <ItemGroup>
-    <PackageReference Include="DemoFile.Game.Deadlock" Version="0.41.2" />
+    <Compile Remove="src\**\*.cs" />
+    <Content Remove="src\**" />
+    <None Remove="src\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="src\DeadlockDashboard.Core\DeadlockDashboard.Core.csproj" />
+    <ProjectReference Include="src\DeadlockDashboard.Shared\DeadlockDashboard.Shared.csproj" />
+    <ProjectReference Include="src\DeadlockDashboard.Api\DeadlockDashboard.Api.csproj" />
+    <ProjectReference Include="src\DeadlockDashboard.Web\DeadlockDashboard.Web.csproj" />
   </ItemGroup>
 
 </Project>

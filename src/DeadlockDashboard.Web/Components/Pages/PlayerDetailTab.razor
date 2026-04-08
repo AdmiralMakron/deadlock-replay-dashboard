@@ -1,0 +1,210 @@
+@inject IJSRuntime JS
+
+<div class="player-detail-section">
+    <h2>Player Detail</h2>
+
+    <div style="margin-bottom:1.5rem;">
+        <select class="stat-select" value="@selectedSteamId" @onchange="OnPlayerChange">
+            @foreach (var p in Match?.Players ?? new())
+            {
+                <option value="@p.SteamId">@p.PlayerName (@p.Team)</option>
+            }
+        </select>
+    </div>
+
+    @if (SelectedPlayer != null)
+    {
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-label">Kills</div>
+                <div class="stat-value mono">@SelectedPlayer.Kills</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Deaths</div>
+                <div class="stat-value mono">@SelectedPlayer.Deaths</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Assists</div>
+                <div class="stat-value mono">@SelectedPlayer.Assists</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">KDA</div>
+                <div class="stat-value mono">@Kda</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Hero Damage</div>
+                <div class="stat-value mono">@FormatNumber(SelectedPlayer.HeroDamage)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Obj Damage</div>
+                <div class="stat-value mono">@FormatNumber(SelectedPlayer.ObjectiveDamage)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Healing</div>
+                <div class="stat-value mono">@FormatNumber(SelectedPlayer.HeroHealing)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Net Worth</div>
+                <div class="stat-value mono">@FormatNumber(SelectedPlayer.NetWorth)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Level</div>
+                <div class="stat-value mono">@SelectedPlayer.Level</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Last Hits</div>
+                <div class="stat-value mono">@SelectedPlayer.LastHits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Denies</div>
+                <div class="stat-value mono">@SelectedPlayer.Denies</div>
+            </div>
+        </div>
+
+        <div class="chart-card" style="margin-top:2rem;">
+            <h3>Cumulative Kills & Deaths</h3>
+            <canvas id="playerKdChart" width="900" height="300"></canvas>
+        </div>
+
+        <div style="margin-top:2rem;">
+            <h3>Combat Log</h3>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event</th>
+                            <th>Other Player</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var evt in CombatLog)
+                        {
+                            <tr>
+                                <td class="mono">@FormatGameTime(evt.GameTimeSeconds)</td>
+                                <td><span class="event-badge event-@(evt.EventType.ToLower())">@evt.EventType</span></td>
+                                <td>@evt.OtherPlayer</td>
+                            </tr>
+                        }
+                        @if (!CombatLog.Any())
+                        {
+                            <tr><td colspan="3" class="text-secondary" style="text-align:center;">No combat events for this player.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public MatchDetailDto? Match { get; set; }
+    [Parameter] public ulong? InitialSteamId { get; set; }
+
+    private string selectedSteamId = "";
+    private bool initialized;
+
+    private PlayerDto? SelectedPlayer => Match?.Players?.FirstOrDefault(p => p.SteamId.ToString() == selectedSteamId);
+
+    private string Kda
+    {
+        get
+        {
+            if (SelectedPlayer == null) return "0.0";
+            var d = SelectedPlayer.Deaths == 0 ? 1 : SelectedPlayer.Deaths;
+            return ((SelectedPlayer.Kills + SelectedPlayer.Assists) / (double)d).ToString("F1");
+        }
+    }
+
+    private record CombatEvent(double GameTimeSeconds, string EventType, string OtherPlayer);
+
+    private List<CombatEvent> CombatLog
+    {
+        get
+        {
+            if (Match?.Deaths == null || SelectedPlayer == null) return new();
+            var sid = SelectedPlayer.SteamId;
+            var events = new List<CombatEvent>();
+
+            foreach (var d in Match.Deaths)
+            {
+                if (d.VictimSteamId == sid)
+                    events.Add(new(d.GameTimeSeconds, "Death", d.KillerName));
+                else if (d.KillerSteamId == sid)
+                    events.Add(new(d.GameTimeSeconds, "Kill", d.VictimName));
+                else if (d.AssisterSteamIds?.Contains(sid) == true)
+                    events.Add(new(d.GameTimeSeconds, "Assist", $"Killed {d.VictimName}"));
+            }
+
+            return events.OrderBy(e => e.GameTimeSeconds).ToList();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!initialized || (InitialSteamId.HasValue && InitialSteamId.Value.ToString() != selectedSteamId))
+        {
+            if (InitialSteamId.HasValue)
+                selectedSteamId = InitialSteamId.Value.ToString();
+            else if (Match?.Players?.Any() == true)
+                selectedSteamId = Match.Players.First().SteamId.ToString();
+            initialized = true;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await RenderPlayerChart();
+    }
+
+    private void OnPlayerChange(ChangeEventArgs e)
+    {
+        selectedSteamId = e.Value?.ToString() ?? "";
+    }
+
+    private async Task RenderPlayerChart()
+    {
+        if (Match?.Deaths == null || SelectedPlayer == null) return;
+
+        var sid = SelectedPlayer.SteamId;
+        var kills = new List<object>();
+        var deaths = new List<object>();
+        int cumKills = 0, cumDeaths = 0;
+
+        // Start at 0
+        kills.Add(new { x = 0, y = 0, tip = "" });
+        deaths.Add(new { x = 0, y = 0, tip = "" });
+
+        foreach (var d in Match.Deaths.OrderBy(d => d.GameTimeSeconds))
+        {
+            if (d.KillerSteamId == sid)
+            {
+                cumKills++;
+                kills.Add(new { x = Math.Round(d.GameTimeSeconds / 60.0, 2), y = cumKills, tip = $"Killed {d.VictimName}" });
+            }
+            if (d.VictimSteamId == sid)
+            {
+                cumDeaths++;
+                deaths.Add(new { x = Math.Round(d.GameTimeSeconds / 60.0, 2), y = cumDeaths, tip = $"Killed by {d.KillerName}" });
+            }
+        }
+
+        try
+        {
+            await JS.InvokeVoidAsync("deadlockCharts.renderPlayerKdChart", "playerKdChart", kills, deaths);
+        }
+        catch { }
+    }
+
+    private static string FormatNumber(int n)
+    {
+        if (n >= 1000) return $"{n / 1000.0:F1}k";
+        return n.ToString();
+    }
+
+    private static string FormatGameTime(double seconds)
+    {
+        var ts = TimeSpan.FromSeconds(seconds);
+        return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}";
+    }
+}

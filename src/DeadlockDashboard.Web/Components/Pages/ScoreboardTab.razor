@@ -1,0 +1,146 @@
+@inject IJSRuntime JS
+
+<div class="scoreboard-section">
+    <h2>Scoreboard</h2>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th @onclick='() => SortBy("name")' class="sortable">Player @SortIcon("name")</th>
+                    <th @onclick='() => SortBy("team")' class="sortable">Team @SortIcon("team")</th>
+                    <th @onclick='() => SortBy("kills")' class="sortable">K @SortIcon("kills")</th>
+                    <th @onclick='() => SortBy("deaths")' class="sortable">D @SortIcon("deaths")</th>
+                    <th @onclick='() => SortBy("assists")' class="sortable">A @SortIcon("assists")</th>
+                    <th @onclick='() => SortBy("networth")' class="sortable">Net Worth @SortIcon("networth")</th>
+                    <th @onclick='() => SortBy("herodmg")' class="sortable">Hero Dmg @SortIcon("herodmg")</th>
+                    <th @onclick='() => SortBy("objdmg")' class="sortable">Obj Dmg @SortIcon("objdmg")</th>
+                    <th @onclick='() => SortBy("lasthits")' class="sortable">LH @SortIcon("lasthits")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in SortedPlayers)
+                {
+                    <tr class="team-row-@(p.Team.ToLower())">
+                        <td><a class="player-link" @onclick="() => OnPlayerSelect.InvokeAsync(p.SteamId)" @onclick:preventDefault>@p.PlayerName</a></td>
+                        <td><span class="team-badge team-@(p.Team.ToLower())">@p.Team</span></td>
+                        <td class="mono">@p.Kills</td>
+                        <td class="mono">@p.Deaths</td>
+                        <td class="mono">@p.Assists</td>
+                        <td class="mono">@FormatNumber(p.NetWorth)</td>
+                        <td class="mono">@FormatNumber(p.HeroDamage)</td>
+                        <td class="mono">@FormatNumber(p.ObjectiveDamage)</td>
+                        <td class="mono">@p.LastHits</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chart-section" style="margin-top:2rem;">
+        <h3>Player Comparison</h3>
+        <div style="margin-bottom:1rem;">
+            <select class="stat-select" @onchange="OnStatChange">
+                <option value="Kills">Kills</option>
+                <option value="Deaths">Deaths</option>
+                <option value="Assists">Assists</option>
+                <option value="HeroDamage">Hero Damage</option>
+                <option value="ObjectiveDamage">Objective Damage</option>
+                <option value="NetWorth">Net Worth</option>
+            </select>
+        </div>
+        <div class="bar-chart">
+            @{ var maxVal = GetMaxBarValue(); }
+            @foreach (var p in Match?.Players?.OrderByDescending(p => GetStatValue(p)) ?? Enumerable.Empty<PlayerDto>())
+            {
+                var pct = maxVal > 0 ? (GetStatValue(p) * 100.0 / maxVal) : 0;
+                <div class="bar-row" @onclick="() => OnPlayerSelect.InvokeAsync(p.SteamId)">
+                    <span class="bar-label">@p.PlayerName</span>
+                    <div class="bar-track">
+                        <div class="bar-fill team-bg-@(p.Team.ToLower())" style="width:@(pct.ToString("F1", System.Globalization.CultureInfo.InvariantCulture))%"></div>
+                    </div>
+                    <span class="bar-value mono">@FormatNumber(GetStatValue(p))</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public MatchDetailDto? Match { get; set; }
+    [Parameter] public EventCallback<ulong> OnPlayerSelect { get; set; }
+
+    private string sortColumn = "team";
+    private bool sortAscending = true;
+    private string selectedStat = "Kills";
+
+    private IEnumerable<PlayerDto> SortedPlayers
+    {
+        get
+        {
+            if (Match?.Players == null) return Enumerable.Empty<PlayerDto>();
+            var players = Match.Players.AsEnumerable();
+            players = sortColumn switch
+            {
+                "name" => sortAscending ? players.OrderBy(p => p.PlayerName) : players.OrderByDescending(p => p.PlayerName),
+                "team" => sortAscending ? players.OrderBy(p => p.Team).ThenByDescending(p => p.Kills) : players.OrderByDescending(p => p.Team).ThenByDescending(p => p.Kills),
+                "kills" => sortAscending ? players.OrderBy(p => p.Kills) : players.OrderByDescending(p => p.Kills),
+                "deaths" => sortAscending ? players.OrderBy(p => p.Deaths) : players.OrderByDescending(p => p.Deaths),
+                "assists" => sortAscending ? players.OrderBy(p => p.Assists) : players.OrderByDescending(p => p.Assists),
+                "networth" => sortAscending ? players.OrderBy(p => p.NetWorth) : players.OrderByDescending(p => p.NetWorth),
+                "herodmg" => sortAscending ? players.OrderBy(p => p.HeroDamage) : players.OrderByDescending(p => p.HeroDamage),
+                "objdmg" => sortAscending ? players.OrderBy(p => p.ObjectiveDamage) : players.OrderByDescending(p => p.ObjectiveDamage),
+                "lasthits" => sortAscending ? players.OrderBy(p => p.LastHits) : players.OrderByDescending(p => p.LastHits),
+                _ => players
+            };
+            return players;
+        }
+    }
+
+    private void SortBy(string column)
+    {
+        if (sortColumn == column)
+            sortAscending = !sortAscending;
+        else
+        {
+            sortColumn = column;
+            sortAscending = column == "name" || column == "team";
+        }
+    }
+
+    private MarkupString SortIcon(string column)
+    {
+        if (sortColumn != column) return new MarkupString("<span class=\"sort-icon dim\">\u2195</span>");
+        return new MarkupString(sortAscending
+            ? "<span class=\"sort-icon\">\u25B2</span>"
+            : "<span class=\"sort-icon\">\u25BC</span>");
+    }
+
+    private void OnStatChange(ChangeEventArgs e)
+    {
+        selectedStat = e.Value?.ToString() ?? "Kills";
+    }
+
+    private int GetStatValue(PlayerDto p) => selectedStat switch
+    {
+        "Kills" => p.Kills,
+        "Deaths" => p.Deaths,
+        "Assists" => p.Assists,
+        "HeroDamage" => p.HeroDamage,
+        "ObjectiveDamage" => p.ObjectiveDamage,
+        "NetWorth" => p.NetWorth,
+        _ => 0
+    };
+
+    private int GetMaxBarValue()
+    {
+        if (Match?.Players == null) return 1;
+        var max = Match.Players.Max(p => GetStatValue(p));
+        return max > 0 ? max : 1;
+    }
+
+    private static string FormatNumber(int n)
+    {
+        if (n >= 1000) return $"{n / 1000.0:F1}k";
+        return n.ToString();
+    }
+}

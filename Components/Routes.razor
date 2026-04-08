@@ -1,6 +1,19 @@
-﻿<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+@using DeadlockDashboard.Web.Components.Pages
+@using DeadlockDashboard.Web.Components.Layout
+
+<Router AppAssembly="typeof(DeadlockDashboard.Web.Components.Pages.Home).Assembly"
+        AdditionalAssemblies="new[] { typeof(Program).Assembly }">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
+    <NotFound>
+        <LayoutView Layout="typeof(MainLayout)">
+            <div class="card" style="text-align:center;padding:3rem;">
+                <h2>Page Not Found</h2>
+                <p class="text-secondary">The page you're looking for doesn't exist.</p>
+                <a href="/" class="btn-primary" style="display:inline-block;margin-top:1rem;padding:0.5rem 1.5rem;text-decoration:none;border-radius:6px;">Go Home</a>
+            </div>
+        </LayoutView>
+    </NotFound>
 </Router>

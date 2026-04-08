@@ -1,0 +1,111 @@
+@page "/dashboard/{MatchId}"
+@rendermode InteractiveServer
+@inject DashboardApiClient Api
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<PageTitle>Match Dashboard - @MatchId</PageTitle>
+
+@if (loading)
+{
+    <div class="loading-indicator" style="padding:3rem;text-align:center;">Loading match data...</div>
+}
+else if (error != null)
+{
+    <div class="card error-message" style="padding:2rem;">
+        <p>@error</p>
+        <button class="btn-primary" @onclick="LoadData">Retry</button>
+    </div>
+}
+else if (match != null)
+{
+    <div class="match-header">
+        <div class="header-info">
+            <h1>Match Dashboard</h1>
+            <div class="header-details">
+                <span class="header-tag">@match.SourceFilename</span>
+                <span class="header-tag">Duration: <span class="mono">@FormatDuration(match.MatchDurationSeconds)</span></span>
+                <span class="header-tag">Winner: <span class="team-@(match.WinningTeam.ToLower())">@match.WinningTeam</span></span>
+                <span class="header-tag">
+                    <span class="team-amber">Amber @match.AmberTeamKills</span>
+                    &ndash;
+                    <span class="team-sapphire">@match.SapphireTeamKills Sapphire</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-nav">
+        <button class="tab-btn @(activeTab == "scoreboard" ? "active" : "")" @onclick='() => SetTab("scoreboard")'>Scoreboard</button>
+        <button class="tab-btn @(activeTab == "timeline" ? "active" : "")" @onclick='() => SetTab("timeline")'>Timeline</button>
+        <button class="tab-btn @(activeTab == "player" ? "active" : "")" @onclick='() => SetTab("player")'>Player Detail</button>
+    </div>
+
+    <div class="tab-content">
+        @if (activeTab == "scoreboard")
+        {
+            <ScoreboardTab Match="match" OnPlayerSelect="SelectPlayer" />
+        }
+        else if (activeTab == "timeline")
+        {
+            <TimelineTab Match="match" />
+        }
+        else if (activeTab == "player")
+        {
+            <PlayerDetailTab Match="match" InitialSteamId="selectedPlayerSteamId" />
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string MatchId { get; set; } = "";
+
+    private MatchDetailDto? match;
+    private bool loading = true;
+    private string? error;
+    private string activeTab = "scoreboard";
+    private ulong? selectedPlayerSteamId;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        loading = true;
+        error = null;
+        StateHasChanged();
+
+        try
+        {
+            match = await Api.GetMatchAsync(MatchId);
+        }
+        catch (Exception ex)
+        {
+            error = $"Failed to load match: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void SetTab(string tab)
+    {
+        activeTab = tab;
+    }
+
+    private void SelectPlayer(ulong steamId)
+    {
+        selectedPlayerSteamId = steamId;
+        activeTab = "player";
+    }
+
+    private static string FormatDuration(double seconds)
+    {
+        var ts = TimeSpan.FromSeconds(seconds);
+        return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}";
+    }
+}

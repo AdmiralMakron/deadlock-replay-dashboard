@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DeadlockDashboard.Api/DeadlockDashboard.Api.csproj" />
+    <Project Path="src/DeadlockDashboard.Core/DeadlockDashboard.Core.csproj" />
+    <Project Path="src/DeadlockDashboard.Shared/DeadlockDashboard.Shared.csproj" />
+    <Project Path="src/DeadlockDashboard.Web/DeadlockDashboard.Web.csproj" />
+  </Folder>
+  <Project Path="DeadlockDashboard.csproj" />
+</Solution>

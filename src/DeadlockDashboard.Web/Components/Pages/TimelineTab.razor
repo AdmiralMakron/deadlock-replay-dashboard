@@ -1,0 +1,134 @@
+@inject IJSRuntime JS
+
+<div class="timeline-section">
+    <h2>Timeline</h2>
+
+    @if (Match?.Timeline?.Snapshots?.Any() != true)
+    {
+        <p class="text-secondary">No timeline data available.</p>
+    }
+    else
+    {
+        <div class="timeline-controls">
+            <label>Time Range:</label>
+            <select class="stat-select" @onchange="OnRangeChange">
+                <option value="0">Full Match</option>
+                @for (int i = 5; i <= maxMinutes; i += 5)
+                {
+                    <option value="@i">First @i min</option>
+                }
+            </select>
+
+            <label style="margin-left:1rem;">Toggle Players:</label>
+            @foreach (var p in Match.Players)
+            {
+                <label class="toggle-label">
+                    <input type="checkbox" checked="@IsPlayerVisible(p.SteamId)" @onchange="() => TogglePlayer(p.SteamId)" />
+                    <span class="team-@(p.Team.ToLower())">@p.PlayerName</span>
+                </label>
+            }
+        </div>
+
+        <div class="chart-card">
+            <h3>Net Worth Over Time (Per Player)</h3>
+            <canvas id="nwChart" width="900" height="350"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Team Net Worth Advantage (Amber - Sapphire)</h3>
+            <canvas id="nwAdvChart" width="900" height="250"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Deaths Per Interval</h3>
+            <canvas id="deathsChart" width="900" height="250"></canvas>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public MatchDetailDto? Match { get; set; }
+
+    private HashSet<ulong> hiddenPlayers = new();
+    private int maxMinutes;
+    private int rangeMinutes;
+    private bool chartsRendered;
+
+    protected override void OnParametersSet()
+    {
+        if (Match?.Timeline?.Snapshots?.Any() == true)
+        {
+            var maxSec = Match.Timeline.Snapshots.Max(s => s.GameTimeSeconds);
+            maxMinutes = (int)Math.Ceiling(maxSec / 60.0);
+            rangeMinutes = 0;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Match?.Timeline?.Snapshots?.Any() == true)
+        {
+            await RenderCharts();
+        }
+    }
+
+    private bool IsPlayerVisible(ulong steamId) => !hiddenPlayers.Contains(steamId);
+
+    private void TogglePlayer(ulong steamId)
+    {
+        if (hiddenPlayers.Contains(steamId))
+            hiddenPlayers.Remove(steamId);
+        else
+            hiddenPlayers.Add(steamId);
+    }
+
+    private void OnRangeChange(ChangeEventArgs e)
+    {
+        rangeMinutes = int.Parse(e.Value?.ToString() ?? "0");
+    }
+
+    private async Task RenderCharts()
+    {
+        if (Match?.Timeline?.Snapshots == null || Match.Players == null) return;
+
+        var snapshots = Match.Timeline.Snapshots;
+        if (rangeMinutes > 0)
+            snapshots = snapshots.Where(s => s.GameTimeSeconds <= rangeMinutes * 60).ToList();
+
+        var labels = snapshots.Select(s => Math.Round(s.GameTimeSeconds / 60.0, 1)).ToArray();
+
+        var colors = new[] { "#E8943A", "#5DAA68", "#9B6FD4", "#3A7BD5", "#D4A843", "#4D9D8F", "#D43A3A", "#C9ABF0" };
+
+        // Per-player net worth
+        var playerSeries = new List<object>();
+        int colorIdx = 0;
+        foreach (var p in Match.Players)
+        {
+            if (hiddenPlayers.Contains(p.SteamId)) continue;
+            var sid = p.SteamId.ToString();
+            var data = snapshots.Select(s => s.PlayerNetWorth.GetValueOrDefault(sid, 0)).ToArray();
+            playerSeries.Add(new
+            {
+                label = p.PlayerName,
+                data,
+                color = p.Team == "Amber" ? "#E8943A" : "#3A7BD5",
+                dash = colorIdx >= Match.Players.Count(pp => pp.Team == p.Team) / 2
+            });
+            colorIdx++;
+        }
+
+        // Team NW advantage
+        var advData = snapshots.Select(s => s.AmberTeamNetWorth - s.SapphireTeamNetWorth).ToArray();
+
+        // Deaths per interval
+        var deathsData = snapshots.Select(s => s.DeathsInInterval).ToArray();
+
+        try
+        {
+            await JS.InvokeVoidAsync("deadlockCharts.renderLineChart", "nwChart", labels, playerSeries);
+            await JS.InvokeVoidAsync("deadlockCharts.renderAdvantageChart", "nwAdvChart", labels, advData);
+            await JS.InvokeVoidAsync("deadlockCharts.renderBarChart", "deathsChart", labels, deathsData);
+        }
+        catch { }
+    }
+}

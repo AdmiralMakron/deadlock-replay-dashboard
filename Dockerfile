@@ -4,13 +4,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copy project file and restore dependencies first (cached layer)
+# Copy project files first for cached restore
 COPY DeadlockDashboard.csproj ./
-RUN dotnet restore
+COPY src/DeadlockDashboard.Core/DeadlockDashboard.Core.csproj src/DeadlockDashboard.Core/
+COPY src/DeadlockDashboard.Shared/DeadlockDashboard.Shared.csproj src/DeadlockDashboard.Shared/
+COPY src/DeadlockDashboard.Api/DeadlockDashboard.Api.csproj src/DeadlockDashboard.Api/
+COPY src/DeadlockDashboard.Web/DeadlockDashboard.Web.csproj src/DeadlockDashboard.Web/
+RUN dotnet restore DeadlockDashboard.csproj
 
-# Copy everything else and build
+# Copy everything else and publish
 COPY . ./
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish DeadlockDashboard.csproj -c Release -o /app/publish
 
 # ============================================
 # Stage 2: Runtime
@@ -31,7 +35,6 @@ RUN curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/
 # Copy published app from build stage
 COPY --from=build /app/publish ./
 
-# Blazor Server listens on 8080 by default in .NET 8+
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "DeadlockDashboard.dll"]

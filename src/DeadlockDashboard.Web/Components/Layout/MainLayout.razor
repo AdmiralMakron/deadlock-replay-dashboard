@@ -1,0 +1,52 @@
+@inherits LayoutComponentBase
+
+<div class="app-container">
+    <nav class="top-nav">
+        <a href="/" class="nav-brand">Deadlock Dashboard</a>
+        <button class="nav-toggle" @onclick="ToggleMenu">
+            <span class="hamburger-icon">@(menuOpen ? "\u2715" : "\u2630")</span>
+        </button>
+        <div class="nav-links @(menuOpen ? "open" : "")">
+            <a href="/" class="nav-link" @onclick="CloseMenu">Home</a>
+            @if (LoadedMatches?.Any() == true)
+            {
+                @foreach (var m in LoadedMatches)
+                {
+                    <a href="/dashboard/@m.MatchId" class="nav-link" @onclick="CloseMenu">@m.SourceFilename</a>
+                }
+            }
+        </div>
+    </nav>
+
+    <main class="main-content">
+        @Body
+    </main>
+</div>
+
+@code {
+    [Inject] private DashboardApiClient Api { get; set; } = default!;
+    private bool menuOpen;
+    private List<MatchSummaryDto>? LoadedMatches;
+    private System.Threading.Timer? _refreshTimer;
+
+    protected override void OnInitialized()
+    {
+        _refreshTimer = new System.Threading.Timer(async _ =>
+        {
+            try
+            {
+                LoadedMatches = await Api.GetMatchesAsync();
+                await InvokeAsync(StateHasChanged);
+            }
+            catch { }
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+    }
+
+    private void ToggleMenu() => menuOpen = !menuOpen;
+    private void CloseMenu() => menuOpen = false;
+
+    public void Dispose()
+    {
+        _refreshTimer?.Dispose();
+    }
+}

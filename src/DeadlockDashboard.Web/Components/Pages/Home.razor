@@ -1,0 +1,206 @@
+@page "/"
+@rendermode InteractiveServer
+@inject DashboardApiClient Api
+@inject NavigationManager Nav
+
+<PageTitle>Deadlock Dashboard</PageTitle>
+
+<h1>Deadlock Replay Dashboard</h1>
+
+<div class="home-grid">
+    <div class="card">
+        <h2>Demo Files</h2>
+        @if (loading)
+        {
+            <div class="loading-indicator">Loading demos...</div>
+        }
+        else if (error != null)
+        {
+            <div class="error-message">
+                <p>@error</p>
+                <button class="btn-primary" @onclick="LoadDemos">Retry</button>
+            </div>
+        }
+        else if (demos?.Any() != true)
+        {
+            <p class="text-secondary">No demo files found in the demos directory.</p>
+        }
+        else
+        {
+            <div class="demo-list">
+                @foreach (var demo in demos)
+                {
+                    <div class="demo-item @(selectedDemo == demo.Filename ? "selected" : "")" @onclick="() => selectedDemo = demo.Filename">
+                        <span class="demo-name">@demo.Filename</span>
+                        <span class="demo-size">@FormatSize(demo.FileSizeBytes)</span>
+                    </div>
+                }
+            </div>
+            <div style="margin-top:1rem;">
+                <button class="btn-primary" @onclick="StartParse" disabled="@(selectedDemo == null || parsing)">
+                    @(parsing ? "Parsing..." : "Parse Selected Demo")
+                </button>
+            </div>
+        }
+
+        @if (parsing)
+        {
+            <div class="progress-container" style="margin-top:1rem;">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:@(parseProgress)%"></div>
+                </div>
+                <p class="text-secondary" style="margin-top:0.5rem;">@parseStatus (@parseProgress%)</p>
+            </div>
+        }
+
+        @if (parseError != null)
+        {
+            <div class="error-message" style="margin-top:1rem;">
+                <p>@parseError</p>
+                <button class="btn-primary" @onclick="StartParse">Retry</button>
+            </div>
+        }
+    </div>
+
+    <div class="card">
+        <h2>Loaded Matches</h2>
+        @if (matches?.Any() != true)
+        {
+            <p class="text-secondary">No matches loaded. Parse a demo file to get started.</p>
+        }
+        else
+        {
+            <div class="demo-list">
+                @foreach (var match in matches)
+                {
+                    <div class="match-item">
+                        <div class="match-info" @onclick="() => Nav.NavigateTo(DashboardUrl(match.MatchId))">
+                            <span class="demo-name">@match.SourceFilename</span>
+                            <span class="text-secondary">@FormatDuration(match.MatchDurationSeconds) &bull; Winner: <span class="team-@(match.WinningTeam.ToLower())">@match.WinningTeam</span></span>
+                        </div>
+                        <button class="btn-danger-sm" @onclick="() => DeleteMatch(match.MatchId)" title="Remove match">&#x2715;</button>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<DemoFileDto>? demos;
+    private List<MatchSummaryDto>? matches;
+    private string? selectedDemo;
+    private bool loading = true;
+    private string? error;
+    private bool parsing;
+    private int parseProgress;
+    private string parseStatus = "Pending";
+    private string? parseError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDemos();
+        await LoadMatches();
+    }
+
+    private async Task LoadDemos()
+    {
+        loading = true;
+        error = null;
+        try
+        {
+            demos = await Api.GetDemosAsync();
+        }
+        catch (Exception ex)
+        {
+            error = $"Failed to load demos: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task LoadMatches()
+    {
+        try
+        {
+            matches = await Api.GetMatchesAsync();
+        }
+        catch { }
+    }
+
+    private async Task StartParse()
+    {
+        if (selectedDemo == null) return;
+        parsing = true;
+        parseError = null;
+        parseProgress = 0;
+        parseStatus = "Starting...";
+        StateHasChanged();
+
+        try
+        {
+            var job = await Api.ParseDemoAsync(selectedDemo);
+            var jobId = job.JobId;
+
+            while (true)
+            {
+                await Task.Delay(1500);
+                var status = await Api.GetJobStatusAsync(jobId);
+                parseProgress = status.Progress;
+                parseStatus = status.Status;
+                StateHasChanged();
+
+                if (status.Status == "Completed")
+                {
+                    parsing = false;
+                    Nav.NavigateTo(DashboardUrl(status.MatchId!));
+                    return;
+                }
+                else if (status.Status == "Failed")
+                {
+                    parsing = false;
+                    parseError = status.ErrorMessage ?? "Parse failed with unknown error.";
+                    StateHasChanged();
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            parsing = false;
+            parseError = $"Error: {ex.Message}";
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteMatch(string matchId)
+    {
+        try
+        {
+            await Api.DeleteMatchAsync(matchId);
+            matches = matches?.Where(m => m.MatchId != matchId).ToList();
+        }
+        catch (Exception ex)
+        {
+            parseError = $"Failed to delete: {ex.Message}";
+        }
+    }
+
+    private static string DashboardUrl(string matchId) => "/dashboard/" + matchId;
+
+    private static string FormatSize(long bytes)
+    {
+        if (bytes >= 1_073_741_824) return $"{bytes / 1_073_741_824.0:F1} GB";
+        if (bytes >= 1_048_576) return $"{bytes / 1_048_576.0:F1} MB";
+        if (bytes >= 1_024) return $"{bytes / 1_024.0:F1} KB";
+        return $"{bytes} B";
+    }
+
+    private static string FormatDuration(double seconds)
+    {
+        var ts = TimeSpan.FromSeconds(seconds);
+        return $"{(int)ts.TotalMinutes}:{ts.Seconds:D2}";
+    }
+}
