@@ -1,26 +1,20 @@
 # Deadlock Replay Dashboard
 
-A Blazor Server web application that parses Deadlock `.dem` replay files using [demofile-net](https://github.com/saul/demofile-net) and renders an interactive post-game analytics dashboard in the browser.
+A .NET 10 project for parsing Deadlock `.dem` replay files using [demofile-net](https://github.com/saul/demofile-net) and rendering interactive post-game analytics dashboards in the browser.
 
-This repo serves as a **clean initial state** for evaluating CLI-based LLM coding agents on a feature development task. Two agents start from this identical baseline and are each given a time-boxed session to build out dashboard features. The containerized setup ensures reproducibility and fair comparison.
+## Starting State
 
-## What's Included
+This repository contains a minimal scaffolded baseline for building a Deadlock replay analytics application. It is not a finished product. The starting state includes:
 
-- Scaffolded Blazor Server project (.NET 10)
-- `DemoFile.Game.Deadlock` NuGet dependency (demofile-net)
-- Full demofile-net source code in `demofile-net/` for local reference
-- Multi-stage Dockerfile for reproducible builds
-- Docker Compose for one-command startup
-- Demo file pull from GitHub Releases (no large files in git)
+- A scaffolded Blazor Server project targeting .NET 10
+- The `DemoFile.Game.Deadlock` NuGet package already referenced in the project file
+- The full [demofile-net](https://github.com/saul/demofile-net) source code vendored in the `demofile-net/` directory as a read-only reference for understanding the parser API, available entity types, and event handlers
+- A multi-stage Dockerfile that builds and runs the application inside a container
+- A Docker Compose configuration for one-command startup
+- A sample `.dem` file hosted as a GitHub Release asset, automatically pulled into the `demos/` directory during the Docker build (large files are not committed to git)
+- This README and an acknowledgements file
 
-## What Agents Are Expected to Build
-
-Starting from this baseline, agents should implement:
-
-- A file selection UI for choosing a `.dem` file
-- Server-side parsing of the demo via demofile-net
-- An interactive dashboard displaying match analytics (scoreboard, damage charts, kill timeline, hero performance)
-- Configurable display settings and filters
+The Blazor scaffold includes the default template pages (Home, Counter, Weather) which are placeholder content and can be freely modified or removed.
 
 ## Prerequisites
 
@@ -39,14 +33,16 @@ Open `http://localhost:5100` in your browser.
 
 ## Demo Files
 
-The `.dem` replay files are hosted as GitHub Release assets and pulled automatically during the Docker build. To run locally without Docker:
+The `.dem` replay files are hosted as GitHub Release assets and pulled automatically during the Docker build. The sample demo file is `48525700.dem` and is available at `/app/demos/48525700.dem` inside the container once built.
+
+To populate the demos directory manually without Docker:
 
 ```bash
 mkdir -p demos
 curl -L https://github.com/AdmiralMakron/deadlock-replay-dashboard/releases/download/v1.0.0/48525700.dem -o demos/48525700.dem
 ```
 
-You can also drop any Deadlock `.dem` file into the `demos/` directory manually.
+You can also drop any other Deadlock `.dem` file into the `demos/` directory.
 
 ## Running Without Docker
 
@@ -64,10 +60,10 @@ The app will start on `http://localhost:5000` or `https://localhost:5001`.
 ```
 ├── Components/
 │   ├── Layout/          # Blazor layout components
-│   └── Pages/           # Page components (dashboard goes here)
-├── demofile-net/        # demofile-net source code (local reference)
+│   └── Pages/           # Default Blazor template pages
+├── demofile-net/        # Vendored demofile-net source code (read-only reference)
 ├── wwwroot/             # Static assets (CSS, images)
-├── demos/               # Demo files (gitignored, pulled at build)
+├── demos/               # Demo files (gitignored, pulled at build time)
 ├── Program.cs           # App entry point
 ├── Dockerfile           # Multi-stage build
 ├── docker-compose.yml   # One-command startup
@@ -76,10 +72,19 @@ The app will start on `http://localhost:5000` or `https://localhost:5001`.
 
 ## Tech Stack
 
-- **Framework:** Blazor Server (.NET 10)
+- **Framework:** Blazor Server on .NET 10
 - **Demo Parser:** [demofile-net](https://github.com/saul/demofile-net) (`DemoFile.Game.Deadlock`)
 - **Containerization:** Docker with multi-stage builds
 - **Web Server:** Kestrel (built into .NET)
+
+## Exploring the demofile-net Source
+
+The `demofile-net/` directory contains a read-only copy of the demofile-net source code. The most relevant paths for working with Deadlock demos are:
+
+- `demofile-net/src/DemoFile.Game.Deadlock/` for Deadlock-specific parser types, entity classes, and event handlers
+- `demofile-net/examples/` for usage patterns and example code
+
+This directory is excluded from compilation in the main project via the `.csproj` file and should not be modified. It exists purely as a reference.
 
 ## License
 
