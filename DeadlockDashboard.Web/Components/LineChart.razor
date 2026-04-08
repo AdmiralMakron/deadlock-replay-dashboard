@@ -1,0 +1,137 @@
+@namespace DeadlockDashboard.Web.Components
+@using System.Globalization
+@using System.Text
+
+<div class="line-chart-wrap" @onmousemove="OnMove" @onmouseleave="() => _hoverX = null">
+    @((MarkupString)BuildSvg())
+    @if (_hoverX is double hovX && Data != null)
+    {
+        double xMin2 = XMin, xMax2 = XMax <= XMin ? XMin + 1 : XMax;
+        double leftPad2 = 56, rightPad2 = 16;
+        double chartW2 = _width - leftPad2 - rightPad2;
+        double dataX = xMin2 + (hovX - leftPad2) / chartW2 * (xMax2 - xMin2);
+        if (dataX >= xMin2 && dataX <= xMax2)
+        {
+            var rows = Data
+                .Where(s => s.Points.Count > 0)
+                .Select(s => (s.Label, s.Color, Value: NearestY(s.Points, dataX)))
+                .OrderByDescending(r => r.Value)
+                .ToList();
+            <div class="chart-tooltip" style="left:@(hovX.ToString("0.##", CultureInfo.InvariantCulture))px">
+                <div class="tt-header">t = @dataX.ToString("0.##", CultureInfo.InvariantCulture) min</div>
+                @foreach (var r in rows)
+                {
+                    <div class="tt-row"><span class="tt-swatch" style="background:@r.Color"></span>@r.Label<span class="tt-val mono">@r.Value.ToString("N0")</span></div>
+                }
+            </div>
+        }
+    }
+</div>
+
+@code {
+    public record Point(double X, double Y);
+    public record Series(string Label, string Color, List<Point> Points);
+
+    [Parameter] public List<Series>? Data { get; set; }
+    [Parameter] public double XMin { get; set; }
+    [Parameter] public double XMax { get; set; } = 1;
+    [Parameter] public string YLabel { get; set; } = "";
+    [Parameter] public int Height { get; set; } = 320;
+    [Parameter] public bool ShowZeroLine { get; set; }
+    private const int _width = 900;
+    private double? _hoverX;
+
+    private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
+    private static string F(double v) => v.ToString("0.##", Inv);
+
+    private string BuildSvg()
+    {
+        double leftPad = 56, rightPad = 16, topPad = 16, bottomPad = 32;
+        double chartW = _width - leftPad - rightPad;
+        double chartH = Height - topPad - bottomPad;
+        double xMin = XMin, xMax = XMax <= XMin ? XMin + 1 : XMax;
+        double yMin = 0, yMax = 1;
+        if (Data != null && Data.Any(s => s.Points.Any()))
+        {
+            var values = Data.SelectMany(s => s.Points.Select(p => p.Y)).ToArray();
+            yMin = Math.Min(0, values.DefaultIfEmpty(0).Min());
+            yMax = values.DefaultIfEmpty(1).Max();
+            if (ShowZeroLine)
+            {
+                var absMax = Math.Max(Math.Abs(yMin), Math.Abs(yMax));
+                yMin = -absMax;
+                yMax = absMax;
+            }
+            if (yMax <= yMin) yMax = yMin + 1;
+        }
+        double X(double x) => leftPad + (x - xMin) / (xMax - xMin) * chartW;
+        double Y(double y) => topPad + chartH - (y - yMin) / (yMax - yMin) * chartH;
+
+        var sb = new StringBuilder();
+        sb.Append($"<svg class=\"line-chart\" viewBox=\"0 0 {_width} {Height}\" preserveAspectRatio=\"xMidYMid meet\">");
+        sb.Append($"<rect x=\"0\" y=\"0\" width=\"{_width}\" height=\"{Height}\" fill=\"#1A1A21\" />");
+
+        // Y gridlines
+        for (int i = 0; i <= 4; i++)
+        {
+            double t = i / 4.0;
+            double yVal = yMin + t * (yMax - yMin);
+            double yPx = topPad + (1 - t) * chartH;
+            sb.Append($"<line x1=\"{F(leftPad)}\" y1=\"{F(yPx)}\" x2=\"{F(leftPad + chartW)}\" y2=\"{F(yPx)}\" stroke=\"rgba(239,222,191,0.08)\" />");
+            sb.Append($"<text x=\"{F(leftPad - 6)}\" y=\"{F(yPx + 4)}\" class=\"axis-label\" text-anchor=\"end\">{yVal.ToString("N0", Inv)}</text>");
+        }
+
+        // X gridlines
+        int xTicks = Math.Max(1, Math.Min(10, (int)(xMax - xMin)));
+        for (int i = 0; i <= xTicks; i++)
+        {
+            double t = i / (double)xTicks;
+            double xVal = xMin + t * (xMax - xMin);
+            double xPx = leftPad + t * chartW;
+            sb.Append($"<line x1=\"{F(xPx)}\" y1=\"{F(topPad)}\" x2=\"{F(xPx)}\" y2=\"{F(topPad + chartH)}\" stroke=\"rgba(239,222,191,0.08)\" />");
+            sb.Append($"<text x=\"{F(xPx)}\" y=\"{F(Height - bottomPad + 18)}\" class=\"axis-label\" text-anchor=\"middle\">{(int)Math.Round(xVal)}</text>");
+        }
+
+        if (ShowZeroLine)
+        {
+            sb.Append($"<line x1=\"{F(leftPad)}\" y1=\"{F(Y(0))}\" x2=\"{F(leftPad + chartW)}\" y2=\"{F(Y(0))}\" stroke=\"rgba(239,222,191,0.24)\" />");
+        }
+
+        if (Data != null)
+        {
+            foreach (var series in Data)
+            {
+                if (series.Points.Count == 0) continue;
+                var path = string.Join(" ", series.Points.Select((p, i) => (i == 0 ? "M" : "L") + F(X(p.X)) + "," + F(Y(p.Y))));
+                sb.Append($"<path d=\"{path}\" fill=\"none\" stroke=\"{series.Color}\" stroke-width=\"2\" />");
+            }
+        }
+
+        sb.Append($"<text x=\"{F(_width / 2.0)}\" y=\"{F(Height - 4)}\" class=\"axis-title\" text-anchor=\"middle\">Game time (min)</text>");
+        sb.Append($"<text x=\"14\" y=\"{F(topPad + chartH / 2)}\" class=\"axis-title\" transform=\"rotate(-90 14,{F(topPad + chartH / 2)})\" text-anchor=\"middle\">{System.Net.WebUtility.HtmlEncode(YLabel)}</text>");
+
+        if (_hoverX is double hx)
+        {
+            double dataX = xMin + (hx - leftPad) / chartW * (xMax - xMin);
+            if (dataX >= xMin && dataX <= xMax)
+            {
+                sb.Append($"<line x1=\"{F(hx)}\" y1=\"{F(topPad)}\" x2=\"{F(hx)}\" y2=\"{F(topPad + chartH)}\" stroke=\"rgba(239,222,191,0.24)\" stroke-dasharray=\"3,3\" />");
+            }
+        }
+
+        sb.Append("</svg>");
+        return sb.ToString();
+    }
+
+    private void OnMove(MouseEventArgs e)
+    {
+        _hoverX = e.OffsetX;
+    }
+
+    private static double NearestY(List<Point> pts, double x)
+    {
+        if (pts.Count == 0) return 0;
+        var nearest = pts.OrderBy(p => Math.Abs(p.X - x)).First();
+        return nearest.Y;
+    }
+}

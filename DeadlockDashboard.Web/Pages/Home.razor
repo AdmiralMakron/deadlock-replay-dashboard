@@ -1,0 +1,231 @@
+@namespace DeadlockDashboard.Web.Pages
+@page "/"
+@rendermode InteractiveServer
+@inject DashboardApiClient Api
+@inject NavigationManager Nav
+@implements IDisposable
+
+<div class="page-content">
+    <h1>Deadlock Replay Dashboard</h1>
+    <p class="muted">Pick a demo file to parse and explore its post-match data.</p>
+
+    <section class="panel">
+        <h2>Available Demos</h2>
+        @if (_loadingDemos)
+        {
+            <div class="loading">Loading demo files...</div>
+        }
+        else if (_demosError is not null)
+        {
+            <div class="error">
+                @_demosError
+                <button class="btn" @onclick="LoadDemos">Retry</button>
+            </div>
+        }
+        else if (_demos is null || _demos.Length == 0)
+        {
+            <div class="muted">No .dem files found in the demos directory.</div>
+        }
+        else
+        {
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Size</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in _demos)
+                    {
+                        <tr class="@(d.Filename == _selectedFile ? "row-selected" : null)">
+                            <td class="mono">@d.Filename</td>
+                            <td class="num">@FormatUtils.HumanBytes(d.SizeBytes)</td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        disabled="@(_parsing && _selectedFile == d.Filename)"
+                                        @onclick="() => StartParse(d.Filename)">
+                                    @(IsParsingThis(d.Filename) ? "Parsing..." : "Parse")
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        @if (_parsing && _activeJob is not null)
+        {
+            <div class="parse-status">
+                <div class="status-label">Parsing <span class="mono">@_selectedFile</span> — @_activeJob.Status</div>
+                <div class="progress">
+                    <div class="progress-bar" style="width:@(_activeJob.ProgressPercent)%"></div>
+                </div>
+                <div class="status-pct">@_activeJob.ProgressPercent%</div>
+            </div>
+        }
+        @if (_parseError is not null)
+        {
+            <div class="error">
+                Parse failed: @_parseError
+                <button class="btn" @onclick="() => StartParse(_selectedFile!)">Retry</button>
+            </div>
+        }
+    </section>
+
+    <section class="panel">
+        <h2>Loaded Matches</h2>
+        @if (_loadingMatches)
+        {
+            <div class="loading">Loading matches...</div>
+        }
+        else if (_matches is null || _matches.Length == 0)
+        {
+            <div class="muted">No matches parsed yet.</div>
+        }
+        else
+        {
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Match ID</th>
+                        <th>Source File</th>
+                        <th>Parsed At</th>
+                        <th>Duration</th>
+                        <th>Winner</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in _matches)
+                    {
+                        <tr>
+                            <td><a class="link mono" href="@($"/dashboard/{m.MatchId}")">@m.MatchId</a></td>
+                            <td class="mono">@m.Filename</td>
+                            <td class="num">@m.ParsedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td class="num">@FormatUtils.FormatDuration(m.DurationSeconds)</td>
+                            <td style="color:@FormatUtils.TeamColor(m.Winner ?? "")">@(m.Winner ?? "—")</td>
+                            <td><button class="btn btn-danger" @onclick="() => DeleteMatch(m.MatchId)">Delete</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </section>
+</div>
+
+@code {
+    private DemoFileDto[]? _demos;
+    private MatchSummaryDto[]? _matches;
+    private bool _loadingDemos = true;
+    private bool _loadingMatches = true;
+    private string? _demosError;
+    private string? _parseError;
+    private string? _selectedFile;
+    private bool _parsing;
+    private ParseJobDto? _activeJob;
+    private CancellationTokenSource? _pollCts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(LoadDemos(), LoadMatches());
+    }
+
+    private bool IsParsingThis(string filename) => _parsing && _selectedFile == filename;
+
+    private async Task LoadDemos()
+    {
+        _loadingDemos = true;
+        _demosError = null;
+        try
+        {
+            _demos = await Api.GetDemosAsync();
+        }
+        catch (Exception ex)
+        {
+            _demosError = ex.Message;
+        }
+        _loadingDemos = false;
+    }
+
+    private async Task LoadMatches()
+    {
+        _loadingMatches = true;
+        try
+        {
+            _matches = await Api.GetMatchesAsync();
+        }
+        catch { _matches = Array.Empty<MatchSummaryDto>(); }
+        _loadingMatches = false;
+    }
+
+    private async Task StartParse(string filename)
+    {
+        _selectedFile = filename;
+        _parseError = null;
+        _parsing = true;
+        _activeJob = null;
+        try
+        {
+            var accepted = await Api.ParseDemoAsync(filename);
+            if (accepted is null) throw new Exception("Parse request returned no job id.");
+            _pollCts?.Cancel();
+            _pollCts = new CancellationTokenSource();
+            _ = PollJobAsync(accepted.JobId, _pollCts.Token);
+        }
+        catch (Exception ex)
+        {
+            _parseError = ex.Message;
+            _parsing = false;
+        }
+    }
+
+    private async Task PollJobAsync(Guid jobId, CancellationToken ct)
+    {
+        try
+        {
+            while (!ct.IsCancellationRequested)
+            {
+                await Task.Delay(1500, ct);
+                var job = await Api.GetJobStatusAsync(jobId, ct);
+                if (job is null) continue;
+                _activeJob = job;
+                await InvokeAsync(StateHasChanged);
+                if (job.Status == JobStatus.Completed && job.MatchId is not null)
+                {
+                    _parsing = false;
+                    await LoadMatches();
+                    Nav.NavigateTo($"/dashboard/{job.MatchId}");
+                    return;
+                }
+                if (job.Status == JobStatus.Failed)
+                {
+                    _parseError = job.Error ?? "Unknown error";
+                    _parsing = false;
+                    await InvokeAsync(StateHasChanged);
+                    return;
+                }
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex)
+        {
+            _parseError = ex.Message;
+            _parsing = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task DeleteMatch(string matchId)
+    {
+        try
+        {
+            await Api.DeleteMatchAsync(matchId);
+            await LoadMatches();
+        }
+        catch { }
+    }
+
+    public void Dispose() => _pollCts?.Cancel();
+}

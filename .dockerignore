@@ -1,5 +1,5 @@
-bin/
-obj/
+**/bin/
+**/obj/
 demos/*.dem
 .git/
 .vs/

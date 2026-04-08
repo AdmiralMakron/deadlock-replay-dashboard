@@ -1,0 +1,90 @@
+@namespace DeadlockDashboard.Web.Pages
+@page "/dashboard/{MatchId}"
+@rendermode InteractiveServer
+@inject DashboardApiClient Api
+@inject NavigationManager Nav
+
+<div class="page-content">
+@if (_loading)
+{
+    <div class="loading">Loading match...</div>
+}
+else if (_error is not null)
+{
+    <div class="error">
+        @_error
+        <button class="btn" @onclick="Load">Retry</button>
+    </div>
+}
+else if (_match is not null)
+{
+    <div class="match-header">
+        <div>
+            <h1 class="match-title">Match <span class="mono">@_match.Info.MatchId</span></h1>
+            <div class="muted mono">@_match.Info.Filename</div>
+        </div>
+        <div class="match-header-stats">
+            <div class="hstat"><div class="hstat-label">Duration</div><div class="hstat-value mono">@FormatUtils.FormatDuration(_match.Info.DurationSeconds)</div></div>
+            <div class="hstat"><div class="hstat-label">Amber</div><div class="hstat-value mono amber">@_match.AmberScore</div></div>
+            <div class="hstat"><div class="hstat-label">Sapphire</div><div class="hstat-value mono sapphire">@_match.SapphireScore</div></div>
+            <div class="hstat"><div class="hstat-label">Winner</div><div class="hstat-value" style="color:@FormatUtils.TeamColor(_match.Info.Winner ?? "")">@(_match.Info.Winner ?? "—")</div></div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab @(_tab == Tab.Scoreboard ? "active" : "")" @onclick="() => _tab = Tab.Scoreboard">Scoreboard</button>
+        <button class="tab @(_tab == Tab.Timeline ? "active" : "")" @onclick="() => _tab = Tab.Timeline">Timeline</button>
+        <button class="tab @(_tab == Tab.PlayerDetail ? "active" : "")" @onclick="() => _tab = Tab.PlayerDetail">Player Detail</button>
+    </div>
+
+    <div class="tab-content">
+    @switch (_tab)
+    {
+        case Tab.Scoreboard:
+            <ScoreboardTab Match="_match" OnPlayerClick="OnPlayerFocus" />
+            break;
+        case Tab.Timeline:
+            <TimelineTab Match="_match" />
+            break;
+        case Tab.PlayerDetail:
+            <PlayerDetailTab Match="_match" InitialSteamId="_focusSteamId" />
+            break;
+    }
+    </div>
+}
+</div>
+
+@code {
+    [Parameter] public string MatchId { get; set; } = "";
+    private MatchDetailDto? _match;
+    private bool _loading = true;
+    private string? _error;
+    private Tab _tab = Tab.Scoreboard;
+    private ulong? _focusSteamId;
+
+    public enum Tab { Scoreboard, Timeline, PlayerDetail }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        _loading = true;
+        _error = null;
+        try
+        {
+            _match = await Api.GetMatchAsync(MatchId);
+            if (_match is null) _error = "Match not found.";
+        }
+        catch (Exception ex) { _error = ex.Message; }
+        _loading = false;
+    }
+
+    private void OnPlayerFocus(ulong steamId)
+    {
+        _focusSteamId = steamId;
+        _tab = Tab.PlayerDetail;
+    }
+}

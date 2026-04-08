@@ -1,0 +1,158 @@
+@namespace DeadlockDashboard.Web.Components
+
+<div class="scoreboard">
+    <table class="data-table scoreboard-table">
+        <thead>
+            <tr>
+                @foreach (var col in _columns)
+                {
+                    <th class="sortable" @onclick="() => SortBy(col.Key)">
+                        @col.Label
+                        @if (_sortKey == col.Key)
+                        {
+                            <span class="sort-arrow">@(_sortDesc ? "▼" : "▲")</span>
+                        }
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Sorted())
+            {
+                <tr class="team-@p.Team.ToLower()">
+                    <td class="cell-name">
+                        <a class="link" style="color:@FormatUtils.TeamColor(p.Team)"
+                           @onclick="() => OnPlayerClick.InvokeAsync(p.SteamId)"
+                           @onclick:preventDefault href="#">
+                            @p.PlayerName
+                        </a>
+                        <div class="hero-name">@(p.HeroName ?? $"Hero {p.HeroId}")</div>
+                    </td>
+                    <td style="color:@FormatUtils.TeamColor(p.Team)">@p.Team</td>
+                    <td class="num">@p.Kills</td>
+                    <td class="num">@p.Deaths</td>
+                    <td class="num">@p.Assists</td>
+                    <td class="num">@p.NetWorth.ToString("N0")</td>
+                    <td class="num">@p.HeroDamage.ToString("N0")</td>
+                    <td class="num">@p.ObjectiveDamage.ToString("N0")</td>
+                    <td class="num">@p.LastHits</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="chart-panel">
+    <div class="chart-header">
+        <h3>Compare Players</h3>
+        <select @bind="_selectedStat" class="select">
+            @foreach (var s in _stats)
+            {
+                <option value="@s.Key">@s.Label</option>
+            }
+        </select>
+    </div>
+    <svg class="bar-chart" viewBox="0 0 @_svgWidth @_svgHeight" preserveAspectRatio="xMidYMid meet">
+        @{
+            var data = Match.Players
+                .Select(p => (Player: p, Value: GetStat(p, _selectedStat)))
+                .OrderByDescending(x => x.Value)
+                .ToArray();
+            double maxVal = data.Length > 0 ? Math.Max(1, data.Max(x => x.Value)) : 1;
+            int barCount = data.Length;
+            double leftPad = 120, rightPad = 20, topPad = 20, bottomPad = 40;
+            double chartW = _svgWidth - leftPad - rightPad;
+            double chartH = _svgHeight - topPad - bottomPad;
+            double rowH = barCount > 0 ? chartH / barCount : 0;
+        }
+        @for (int i = 0; i < data.Length; i++)
+        {
+            var p = data[i].Player;
+            double v = data[i].Value;
+            double w = chartW * (v / maxVal);
+            double y = topPad + i * rowH + 4;
+            double h = Math.Max(4, rowH - 8);
+            <g>
+                <text x="@(leftPad - 6)" y="@(y + h / 2 + 4)" class="bar-label" text-anchor="end">@p.PlayerName</text>
+                <rect x="@leftPad" y="@y" width="@w.ToString("0.##")" height="@h.ToString("0.##")"
+                      fill="@FormatUtils.TeamColor(p.Team)"
+                      class="bar"
+                      @onclick="() => OnPlayerClick.InvokeAsync(p.SteamId)" />
+                <text x="@(leftPad + w + 6)" y="@(y + h / 2 + 4)" class="bar-value">@v.ToString("N0")</text>
+            </g>
+        }
+    </svg>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public MatchDetailDto Match { get; set; } = default!;
+    [Parameter] public EventCallback<ulong> OnPlayerClick { get; set; }
+
+    private string _sortKey = "NetWorth";
+    private bool _sortDesc = true;
+    private string _selectedStat = "Kills";
+    private const int _svgWidth = 800;
+    private const int _svgHeight = 360;
+
+    private record ColDef(string Key, string Label);
+    private readonly ColDef[] _columns = new[]
+    {
+        new ColDef("Name", "Player"),
+        new ColDef("Team", "Team"),
+        new ColDef("Kills", "K"),
+        new ColDef("Deaths", "D"),
+        new ColDef("Assists", "A"),
+        new ColDef("NetWorth", "Net Worth"),
+        new ColDef("HeroDamage", "Hero Dmg"),
+        new ColDef("ObjectiveDamage", "Obj Dmg"),
+        new ColDef("LastHits", "Last Hits"),
+    };
+
+    private record StatDef(string Key, string Label);
+    private readonly StatDef[] _stats = new[]
+    {
+        new StatDef("Kills", "Kills"),
+        new StatDef("Deaths", "Deaths"),
+        new StatDef("Assists", "Assists"),
+        new StatDef("HeroDamage", "Hero Damage"),
+        new StatDef("ObjectiveDamage", "Objective Damage"),
+        new StatDef("NetWorth", "Net Worth"),
+    };
+
+    private void SortBy(string key)
+    {
+        if (_sortKey == key) _sortDesc = !_sortDesc;
+        else { _sortKey = key; _sortDesc = true; }
+    }
+
+    private IEnumerable<PlayerStatsDto> Sorted()
+    {
+        Func<PlayerStatsDto, IComparable> sel = _sortKey switch
+        {
+            "Name" => p => p.PlayerName,
+            "Team" => p => p.Team,
+            "Kills" => p => p.Kills,
+            "Deaths" => p => p.Deaths,
+            "Assists" => p => p.Assists,
+            "NetWorth" => p => p.NetWorth,
+            "HeroDamage" => p => p.HeroDamage,
+            "ObjectiveDamage" => p => p.ObjectiveDamage,
+            "LastHits" => p => p.LastHits,
+            _ => p => p.NetWorth,
+        };
+        return _sortDesc
+            ? Match.Players.OrderByDescending(sel)
+            : Match.Players.OrderBy(sel);
+    }
+
+    private static double GetStat(PlayerStatsDto p, string key) => key switch
+    {
+        "Kills" => p.Kills,
+        "Deaths" => p.Deaths,
+        "Assists" => p.Assists,
+        "HeroDamage" => p.HeroDamage,
+        "ObjectiveDamage" => p.ObjectiveDamage,
+        "NetWorth" => p.NetWorth,
+        _ => 0
+    };
+}

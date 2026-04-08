@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>DeadlockDashboard.Host</RootNamespace>
+    <AssemblyName>DeadlockDashboard.Host</AssemblyName>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DeadlockDashboard.Core\DeadlockDashboard.Core.csproj" />
+    <ProjectReference Include="..\DeadlockDashboard.Shared\DeadlockDashboard.Shared.csproj" />
+    <ProjectReference Include="..\DeadlockDashboard.Api\DeadlockDashboard.Api.csproj" />
+    <ProjectReference Include="..\DeadlockDashboard.Web\DeadlockDashboard.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="..\demofile-net\**\*.cs" />
+    <Content Remove="..\demofile-net\**\*" />
+    <None Remove="..\demofile-net\**\*" />
+  </ItemGroup>
+
+</Project>

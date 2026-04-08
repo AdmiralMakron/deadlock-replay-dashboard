@@ -1,0 +1,71 @@
+@namespace DeadlockDashboard.Web.Layout
+@inherits LayoutComponentBase
+@inject DashboardApiClient Api
+@inject NavigationManager Nav
+@implements IDisposable
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a class="brand" href="/">Deadlock<span>Replay</span></a>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" href="/">Home</a>
+            <div class="nav-section">Matches</div>
+            @if (_loading)
+            {
+                <div class="nav-muted">Loading...</div>
+            }
+            else if (_matches is null || _matches.Length == 0)
+            {
+                <div class="nav-muted">None loaded</div>
+            }
+            else
+            {
+                @foreach (var m in _matches)
+                {
+                    <a class="nav-link match-link" href="@($"/dashboard/{m.MatchId}")">
+                        <div class="match-id">@m.MatchId</div>
+                        <div class="match-meta">@m.Filename</div>
+                    </a>
+                }
+            }
+        </nav>
+    </aside>
+    <main class="main">
+        @Body
+    </main>
+</div>
+
+@code {
+    private MatchSummaryDto[]? _matches;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Nav.LocationChanged += OnLocationChanged;
+        await Refresh();
+    }
+
+    private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        await Refresh();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task Refresh()
+    {
+        _loading = true;
+        try
+        {
+            _matches = await Api.GetMatchesAsync();
+        }
+        catch { _matches = Array.Empty<MatchSummaryDto>(); }
+        _loading = false;
+    }
+
+    public void Dispose()
+    {
+        Nav.LocationChanged -= OnLocationChanged;
+    }
+}

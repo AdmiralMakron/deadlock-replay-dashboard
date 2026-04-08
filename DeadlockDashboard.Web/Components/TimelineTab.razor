@@ -1,0 +1,133 @@
+@namespace DeadlockDashboard.Web.Components
+
+<div class="timeline-tab">
+    <div class="timeline-controls">
+        <div class="controls-group">
+            <label>Time range (min):</label>
+            <input type="range" min="0" max="@_maxMinutes" step="1" value="@_rangeStart"
+                   @oninput="e => { _rangeStart = Math.Clamp(int.Parse(e.Value!.ToString()!), 0, _rangeEnd - 1); }" />
+            <input type="range" min="0" max="@_maxMinutes" step="1" value="@_rangeEnd"
+                   @oninput="e => { _rangeEnd = Math.Clamp(int.Parse(e.Value!.ToString()!), _rangeStart + 1, _maxMinutes); }" />
+            <span class="mono">@_rangeStart - @_rangeEnd min</span>
+            <button class="btn" @onclick="() => { _rangeStart = 0; _rangeEnd = _maxMinutes; }">Reset</button>
+        </div>
+        <div class="controls-group">
+            <label>Players:</label>
+            @foreach (var p in Match.Players)
+            {
+                var enabled = _enabledPlayers.Contains(p.SteamId);
+                <button class="chip @(enabled ? "on" : "off")"
+                        style="border-color:@FormatUtils.TeamColor(p.Team); color:@(enabled ? FormatUtils.TeamColor(p.Team) : "#5E5E72")"
+                        @onclick="() => Toggle(p.SteamId)">
+                    @p.PlayerName
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="chart-panel">
+        <h3>Net Worth Over Time (per player)</h3>
+        @{
+            var filteredSnapshots = FilteredSnapshots();
+        }
+        <LineChart Data="BuildPlayerSeries(filteredSnapshots)"
+                   XMin="_rangeStart" XMax="_rangeEnd"
+                   YLabel="Net Worth"
+                   Height="360" />
+    </div>
+
+    <div class="chart-panel">
+        <h3>Team Net Worth Advantage (Amber − Sapphire)</h3>
+        <LineChart Data="BuildAdvantageSeries(filteredSnapshots)"
+                   XMin="_rangeStart" XMax="_rangeEnd"
+                   YLabel="Advantage"
+                   Height="240" ShowZeroLine="true" />
+    </div>
+
+    <div class="chart-panel">
+        <h3>Deaths Per Minute</h3>
+        <LineChart Data="BuildDeathsPerMinute()"
+                   XMin="_rangeStart" XMax="_rangeEnd"
+                   YLabel="Deaths"
+                   Height="240" />
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public MatchDetailDto Match { get; set; } = default!;
+    private HashSet<ulong> _enabledPlayers = new();
+    private int _rangeStart;
+    private int _rangeEnd;
+    private int _maxMinutes;
+
+    protected override void OnParametersSet()
+    {
+        _maxMinutes = Math.Max(1, (int)Math.Ceiling(Match.Info.DurationSeconds / 60.0));
+        if (_rangeEnd == 0 || _rangeEnd > _maxMinutes) _rangeEnd = _maxMinutes;
+        if (_enabledPlayers.Count == 0)
+            _enabledPlayers = Match.Players.Select(p => p.SteamId).ToHashSet();
+    }
+
+    private void Toggle(ulong steamId)
+    {
+        if (!_enabledPlayers.Add(steamId)) _enabledPlayers.Remove(steamId);
+    }
+
+    private List<TimelineSnapshotDto> FilteredSnapshots()
+    {
+        return Match.Timeline
+            .Where(s => s.GameTimeSeconds / 60.0 >= _rangeStart && s.GameTimeSeconds / 60.0 <= _rangeEnd)
+            .OrderBy(s => s.GameTimeSeconds)
+            .ToList();
+    }
+
+    private List<LineChart.Series> BuildPlayerSeries(List<TimelineSnapshotDto> snapshots)
+    {
+        var result = new List<LineChart.Series>();
+        int colorIdx = 0;
+        var palette = new[] { "#E8943A", "#5DAA68", "#9B6FD4", "#3A7BD5", "#D4A843", "#4D9D8F", "#D43A3A", "#C9ABF0" };
+        foreach (var player in Match.Players)
+        {
+            if (!_enabledPlayers.Contains(player.SteamId)) { colorIdx++; continue; }
+            var pts = new List<LineChart.Point>();
+            foreach (var s in snapshots)
+            {
+                var psnap = s.Players.FirstOrDefault(x => x.SteamId == player.SteamId);
+                if (psnap is null) continue;
+                pts.Add(new LineChart.Point(s.GameTimeSeconds / 60.0, psnap.NetWorth));
+            }
+            result.Add(new LineChart.Series(player.PlayerName, palette[colorIdx % palette.Length], pts));
+            colorIdx++;
+        }
+        return result;
+    }
+
+    private List<LineChart.Series> BuildAdvantageSeries(List<TimelineSnapshotDto> snapshots)
+    {
+        var pts = snapshots
+            .Select(s => new LineChart.Point(s.GameTimeSeconds / 60.0, s.AmberNetWorthTotal - s.SapphireNetWorthTotal))
+            .ToList();
+        return new List<LineChart.Series>
+        {
+            new LineChart.Series("Amber − Sapphire", "#E8943A", pts),
+        };
+    }
+
+    private List<LineChart.Series> BuildDeathsPerMinute()
+    {
+        var buckets = new Dictionary<int, int>();
+        foreach (var d in Match.Deaths)
+        {
+            int min = (int)Math.Floor(d.GameTimeSeconds / 60.0);
+            if (min < _rangeStart || min > _rangeEnd) continue;
+            buckets[min] = buckets.GetValueOrDefault(min) + 1;
+        }
+        var pts = Enumerable.Range(_rangeStart, Math.Max(0, _rangeEnd - _rangeStart + 1))
+            .Select(m => new LineChart.Point(m, buckets.GetValueOrDefault(m)))
+            .ToList();
+        return new List<LineChart.Series>
+        {
+            new LineChart.Series("Deaths / min", "#D43A3A", pts),
+        };
+    }
+}

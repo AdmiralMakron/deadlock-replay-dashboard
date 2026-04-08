@@ -1,0 +1,122 @@
+@namespace DeadlockDashboard.Web.Components
+
+<div class="player-detail">
+    <div class="player-picker">
+        <label>Player:</label>
+        <select class="select" @bind="_steamId">
+            @foreach (var p in Match.Players)
+            {
+                <option value="@p.SteamId">@p.PlayerName (@p.Team)</option>
+            }
+        </select>
+    </div>
+
+    @if (_player is not null)
+    {
+        <div class="stat-grid">
+            @foreach (var card in Cards())
+            {
+                <div class="stat-card">
+                    <div class="stat-label">@card.Label</div>
+                    <div class="stat-value mono">@card.Value</div>
+                </div>
+            }
+        </div>
+
+        <div class="chart-panel">
+            <h3>Cumulative Kills &amp; Deaths</h3>
+            <LineChart Data="BuildKdSeries()" XMin="0" XMax="@MaxMinutes" YLabel="Count" Height="320" />
+        </div>
+
+        <div class="chart-panel">
+            <h3>Combat Log</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Event</th>
+                        <th>Other Player</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in CombatLog())
+                    {
+                        <tr>
+                            <td class="num mono">@FormatUtils.FormatDuration(row.GameTimeSeconds)</td>
+                            <td style="color:@(row.Kind == "Kill" ? "#5DAA68" : row.Kind == "Death" ? "#D43A3A" : "#D4A843")">@row.Kind</td>
+                            <td>@row.Other</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public MatchDetailDto Match { get; set; } = default!;
+    [Parameter] public ulong? InitialSteamId { get; set; }
+
+    private ulong _steamId;
+
+    private PlayerStatsDto? _player => Match.Players.FirstOrDefault(p => p.SteamId == _steamId);
+    private int MaxMinutes => Math.Max(1, (int)Math.Ceiling(Match.Info.DurationSeconds / 60.0));
+
+    protected override void OnParametersSet()
+    {
+        if (InitialSteamId.HasValue && Match.Players.Any(p => p.SteamId == InitialSteamId.Value))
+            _steamId = InitialSteamId.Value;
+        else if (_steamId == 0 && Match.Players.Count > 0)
+            _steamId = Match.Players[0].SteamId;
+    }
+
+    private record Card(string Label, string Value);
+    private IEnumerable<Card> Cards()
+    {
+        var p = _player!;
+        double kda = p.Deaths == 0 ? p.Kills + p.Assists : Math.Round((p.Kills + p.Assists) / (double)p.Deaths, 2);
+        yield return new("Kills", p.Kills.ToString());
+        yield return new("Deaths", p.Deaths.ToString());
+        yield return new("Assists", p.Assists.ToString());
+        yield return new("KDA", kda.ToString("0.00"));
+        yield return new("Hero Damage", p.HeroDamage.ToString("N0"));
+        yield return new("Objective Damage", p.ObjectiveDamage.ToString("N0"));
+        yield return new("Healing", p.Healing.ToString("N0"));
+        yield return new("Net Worth", p.NetWorth.ToString("N0"));
+        yield return new("Level", p.Level.ToString());
+        yield return new("Last Hits", p.LastHits.ToString());
+        yield return new("Denies", p.Denies.ToString());
+    }
+
+    private List<LineChart.Series> BuildKdSeries()
+    {
+        var kills = Match.Deaths.Where(d => d.KillerSteamId == _steamId).OrderBy(d => d.GameTimeSeconds).ToList();
+        var deaths = Match.Deaths.Where(d => d.VictimSteamId == _steamId).OrderBy(d => d.GameTimeSeconds).ToList();
+        var killPts = new List<LineChart.Point>();
+        var deathPts = new List<LineChart.Point>();
+        killPts.Add(new(0, 0));
+        deathPts.Add(new(0, 0));
+        int kc = 0, dc = 0;
+        foreach (var k in kills) { kc++; killPts.Add(new(k.GameTimeSeconds / 60.0, kc)); }
+        foreach (var d in deaths) { dc++; deathPts.Add(new(d.GameTimeSeconds / 60.0, dc)); }
+        killPts.Add(new(MaxMinutes, kc));
+        deathPts.Add(new(MaxMinutes, dc));
+        return new()
+        {
+            new LineChart.Series("Kills", "#5DAA68", killPts),
+            new LineChart.Series("Deaths", "#D43A3A", deathPts),
+        };
+    }
+
+    private record CombatRow(double GameTimeSeconds, string Kind, string Other);
+    private IEnumerable<CombatRow> CombatLog()
+    {
+        foreach (var d in Match.Deaths.OrderBy(d => d.GameTimeSeconds))
+        {
+            if (d.KillerSteamId == _steamId)
+                yield return new(d.GameTimeSeconds, "Kill", d.VictimName);
+            else if (d.VictimSteamId == _steamId)
+                yield return new(d.GameTimeSeconds, "Death", d.KillerName ?? "—");
+        }
+    }
+}
